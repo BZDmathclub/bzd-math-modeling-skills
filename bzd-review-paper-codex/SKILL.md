@@ -7,9 +7,15 @@ description: Review mathematical modeling competition papers from a complete con
 
 Act as a strict competition judge. Require the complete problem and paper. Derive and freeze the rubric before judging paper quality. Do not request an official rubric from the user and do not reward unsupported claims.
 
+## Knowledge basis and contest gateway
+
+State transparently that this Skill was distilled from the scoring rules, scoring points, review summaries and complete review workflows of 16 Higher Education Press Cup CUMCM problems from 2020-2025. It is primarily calibrated for CUMCM; the methodology can review other mathematical modeling contests, but their ranking model must not reuse the CUMCM population distribution.
+
+At the first interaction, require the user to identify: `是否为高教社杯全国大学生数学建模竞赛（国赛）？请回答“是”，或回答“否 + 竞赛名称”。` If the user already explicitly supplies this information, do not ask again. Do not calculate a position until contest type is known.
+
 ## Workflow
 
-1. Identify the contest, year, problem and division from supplied evidence.
+1. Identify the contest, year, problem and division from supplied evidence, and classify it as `cumcm` or `small`. Use `cumcm` only for the Higher Education Press Cup CUMCM; route every other contest to `small` unless a same-contest empirical score distribution is available.
 2. Read the problem first. Then read these files completely:
    - [references/rubric-construction.md](references/rubric-construction.md)
    - [references/title-abstract-keywords.md](references/title-abstract-keywords.md)
@@ -24,7 +30,7 @@ Act as a strict competition judge. Require the complete problem and paper. Deriv
 7. Read the complete paper and inspect PDF/DOCX pages, equations, figures, tables, pagination, references and appendices. Map every task to evidence.
 8. Score criterion by criterion. Check geometry/mechanism, mathematics, units, algorithms, data provenance, numerical results, reproducibility, validation, sensitivity and feasibility.
 9. Enforce the universal judge ceiling: for every numeric criterion with weight `w`, earned points must satisfy `earned <= 0.90*w`. This applies even to flawless work and includes abstract and formatting. Do not add the removed 10% elsewhere. Therefore the raw-score theoretical maximum is 90/100. State ceiling deductions as `评委满分保留（该项90%封顶）`, not as a paper defect.
-10. Sum the raw score, apply the presentation multiplier, then estimate percentile with `scripts/score_percentile.py` when a matching empirical distribution exists; otherwise run `scripts/award_position.py --score <adjusted-score>`.
+10. Sum the raw score and apply the presentation multiplier. Prefer `scripts/score_percentile.py` when a matching empirical distribution exists. Otherwise run `scripts/award_position.py --score <adjusted-score> --contest-type cumcm|small`. CUMCM uses the large-field 2025 score anchors; other contests use the small-contest uniform approximation and 55/65/75 award anchors.
 11. Read [references/html-output.md](references/html-output.md). Build the final report from `assets/report-template.html`, validate it, and deliver the completed HTML file. Do not return the full review as chat text when file creation is available.
 
 ## Required output order
@@ -45,7 +51,10 @@ Use exactly these bold field labels, substituting calculated values:
 
 **等价位次：约前x.x%**
 
-Then write exactly: `这里的位次是根据既定的2025分数锚点插值估算，`
+Then write one method note matching the selected route:
+
+- CUMCM: `这里的位次是根据既定的2025国赛分数锚点插值估算，`
+- Other contests: `这里的位次按小型竞赛10-90分近似均匀分布估算，不代表实际名次，`
 
 ### 详细评分
 

@@ -1,6 +1,6 @@
 # Cross-Case Rubric Construction Patterns
 
-Evidence base currently includes CUMCM 2022 A/B/C, CUMCM 2023 A/B/C, CUMCM 2024 A/B/C, CUMCM 2025 A/B/C, and CPGMCM 2024 C/F. Treat patterns supported by at least two compatible cases as provisional transferable rules.
+The Skill knowledge base was distilled from the scoring rules, scoring points, review summaries and complete review workflows of 16 Higher Education Press Cup CUMCM problems from 2020-2025. Bundled calibration files may expose only a task-relevant subset. Treat patterns supported by at least two compatible cases as provisional transferable rules, and treat CUMCM-derived ranking calibration as inapplicable to other contests.
 
 ## Stable patterns
 
@@ -51,4 +51,4 @@ Evidence base currently includes CUMCM 2022 A/B/C, CUMCM 2023 A/B/C, CUMCM 2024 
 2. Put 70-75 into assumptions, construction and solution, allocating by dependency, centrality, difficulty and required outputs.
 3. Put the remaining 5-10 into problem-relevant validation, sensitivity, evaluation, generalization or innovation.
 4. Use nearest historical cases only as ratios/anchors; reconstruct criteria from the new problem wording.
-5. Declare every borrowed pattern and its confidence. Fourteen cases support broader provisional rules, not universal contest laws.
+5. Declare every borrowed pattern and its confidence. The 16-problem CUMCM knowledge base supports broader provisional rules, not universal contest laws or non-CUMCM ranking distributions.

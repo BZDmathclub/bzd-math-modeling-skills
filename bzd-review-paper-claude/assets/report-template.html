@@ -21,7 +21,7 @@
       <article class="card metric"><div class="metric-label">格式质量系数</div><div class="metric-value">{{FORMAT_MULTIPLIER}}</div></article>
       <article class="card metric"><div class="metric-label">预估超过有效论文</div><div class="metric-value">{{PERCENTILE}}%</div><div class="rankbar"><span></span></div></article>
       <article class="card metric"><div class="metric-label">等价位次</div><div class="metric-value">前 {{TOP_SHARE}}%</div></article>
-    </div><p class="note">这里的位次是根据既定的2025分数锚点插值估算，</p></section>
+    </div><p class="note">{{RANK_METHOD_NOTE}}</p></section>
     <section class="card section"><h2><span>01</span>详细评分</h2><div class="table-wrap"><table><thead><tr><th>评分项</th><th>权重</th><th>90%封顶</th><th>得分</th><th>证据/位置</th><th>得分依据</th><th>扣分依据</th></tr></thead><tbody>{{SCORING_ROWS}}</tbody></table></div>{{SCORING_SUMMARY}}</section>
     <section class="card section"><h2><span>02</span>本题任务分解</h2><ol class="clean-list numbered">{{TASK_ITEMS}}</ol></section>
     <section class="card section"><h2><span>03</span>资格与格式审查</h2><ul class="clean-list">{{AUDIT_ITEMS}}</ul></section>

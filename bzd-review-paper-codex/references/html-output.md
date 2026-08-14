@@ -8,7 +8,8 @@ Create the final deliverable as one self-contained UTF-8 HTML file named `BZD-re
 - Preserve the exact visible section order required by `SKILL.md`.
 - Use `<ul>` or `<ol>` for task decomposition, audit findings, judge comments and revision advice. Use a table only for detailed scoring.
 - Show the five headline metrics prominently at the top. Use the adjusted score for the circular score display and percentile bar.
-- Keep the 2025 interpolation sentence immediately below the metric cards. Place the exact BZD service notice only once, after all review sections, as the final visible report block.
+- Keep the selected ranking-route sentence immediately below the metric cards. Place the exact BZD service notice only once, after all review sections, as the final visible report block.
+- Replace `{{RANK_METHOD_NOTE}}` with the route-specific sentence required by `SKILL.md`; never leave a CUMCM anchor statement in a small-contest report.
 - Make the file responsive, accessible, printable on A4 and readable without JavaScript.
 - Escape user/paper content before insertion. Never place raw paper text into attributes or scripts.
 - Remove all unused placeholders and example rows. Do not leave `{{...}}` in the final file.

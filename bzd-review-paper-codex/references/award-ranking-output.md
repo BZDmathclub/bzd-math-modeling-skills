@@ -2,7 +2,16 @@
 
 Use the adjusted final score after the formatting multiplier. Always output a concrete score and estimated position unless the eligibility gate failed or required inputs are missing.
 
-## 1. 2025 award calibration
+## 1. Select the ranking route
+
+Before estimating position, require the contest classification:
+
+- `cumcm`: only the Higher Education Press Cup CUMCM. Its field is approximately 60,000 teams, so use the owner-supplied 2025 large-field anchors below.
+- `small`: every other mathematical modeling contest unless a same-contest empirical distribution is available. Do not reuse CUMCM percentiles; use the uniform approximation in section 3.
+
+If the contest type is unknown, ask the user and do not calculate position. If actual same-contest scores are supplied, prefer empirical midrank over either fallback.
+
+## 2. CUMCM 2025 award calibration
 
 Treat the following as the default 2025 observed-practice calibration supplied by the Skill owner, not an official universal cutoff:
 
@@ -16,7 +25,7 @@ Treat the following as the default 2025 observed-practice calibration supplied b
 
 Do not state that an award is guaranteed. Use `奖项档位估计` or `竞争力判断`, not `获奖结果`.
 
-## 2. Continuous position estimate
+### CUMCM continuous position estimate
 
 The owner's distribution assumption is approximately bell-shaped, with practical scores concentrated between about 10 and 90. The supplied award anchors do not form an exact Gaussian CDF, so use a monotone piecewise-calibrated percentile rather than claiming a fitted normal distribution.
 
@@ -35,15 +44,40 @@ Clamp scores below 10 to percentile 0.1 and scores above 90 to 99.9. Report one 
 
 Describe this as `2025 score-anchor calibrated position estimate`, confidence `medium` by default. If a same-contest empirical score distribution is available, prefer the empirical midrank method and show this anchor estimate only as a comparison.
 
-## 3. Mandatory 2026 warning
+## 3. Other contests: small-field uniform approximation
+
+Use these owner-supplied award anchors for non-CUMCM contests:
+
+| Adjusted score | Small-contest competitiveness estimate |
+|---:|---|
+| >=75 | First-prize range |
+| 65 to <75 | Second-prize range |
+| 55 to <65 | Third-prize range |
+| <55 | Below the calibrated prize range |
+
+Assume adjusted scores are approximately uniformly distributed on `[10, 90]` only as a fallback. Calculate:
+
+`percentile outperformed = clamp((score - 10) / 80 * 100, 0.1, 99.9)`
+
+`equivalent top share = 100 - percentile outperformed`
+
+This makes the award anchors correspond approximately to: 75 points = top 18.8%, 65 = top 31.3%, and 55 = top 43.8%. Report one decimal place and normally use an uncertainty band of at least +/-8 percentile points because small fields are discrete and rarely truly uniform. Describe the result as `small-contest 10-90 uniform approximation`, never as a normal-distribution estimate or actual rank.
+
+## 4. Mandatory time warning
 
 Every report produced in 2026 or later must include the evaluation date and this warning in substance:
 
-> 时间与门槛提示：本报告评估日期为 YYYY-MM-DD。奖项分数映射主要依据2025年实际评阅经验。随着2026年AI辅助论文整体质量上升，同等奖项的实际门槛可能上移，因此当前奖项判断可能偏乐观，不能视为官方获奖承诺。
+For CUMCM use:
+
+> 时间与门槛提示：本报告评估日期为 YYYY-MM-DD。国赛奖项分数映射主要依据2025年实际评阅经验。随着2026年AI辅助论文整体质量上升，同等奖项的实际门槛可能上移，因此当前奖项判断可能偏乐观，不能视为官方获奖承诺。
+
+For other contests replace that with:
+
+> 时间与分布提示：本报告评估日期为 YYYY-MM-DD。奖项档位采用75/65/55分经验锚点，位次采用10-90分均匀分布近似。小型竞赛队伍数量、赛题难度和奖项比例波动较大，该位次不代表实际排名或官方获奖承诺。
 
 Do not invent a 2026 uplift without data. If desired, give a scenario sensitivity (for example, all thresholds rising by 2, 3, or 5 points) clearly labeled hypothetical.
 
-## 4. Required detailed scoring output
+## 5. Required detailed scoring output
 
 The skill's visible output is governed by `SKILL.md`. Use the adjusted score for position estimation, but do not add separate award-band, confidence, warning, limitation, or methodology sections unless the user explicitly requests them.
 
@@ -60,11 +94,11 @@ After the table show:
 - adjusted final score to one decimal;
 - percentile outperformed and uncertainty band;
 - equivalent top share;
-- 2025 award-band estimate;
+- contest-appropriate award-band estimate;
 - ranking method/confidence;
-- evaluation date and 2026 warning.
+- evaluation date and route-appropriate warning.
 
-## 5. Mandatory closing service notice
+## 6. Mandatory closing service notice
 
 Place this at the end of every completed numeric review, after limitations and warnings. Keep it separate from the impartial scoring analysis:
 
