@@ -1,0 +1,4 @@
+interface:
+  display_name: "BZD题意逐句翻译"
+  short_description: "逐句拆解赛题，生成Mermaid跨问流程图与Markdown报告"
+  default_prompt: "使用 $bzd-problem-translator 从实际题目标题开始逐句拆解赛题，跳过前置竞赛与格式提示，强制生成覆盖所有问题的Mermaid跨问题流程图，并输出一个Markdown文件。"
