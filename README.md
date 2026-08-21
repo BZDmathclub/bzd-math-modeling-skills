@@ -13,6 +13,8 @@
 | [`bzd-review-paper`](skills/bzd-review-paper/) | 根据赛题制定细则并评审论文 | 竞赛类型、完整赛题、完整论文 | 百分制得分、预估位次、HTML评审报告 |
 | [`bzd-cumcm-school-awards`](skills/bzd-cumcm-school-awards/) | 查询高校五年国奖数据并评估个人备赛差距 | 学校名称、赛区及个人竞赛经历 | 高校国奖画像、2026预测及备赛建议 |
 | [`bzd-abstract-checker`](skills/bzd-abstract-checker/) | 仅输入摘要，检查独立阅读性及具体写作问题 | 数学建模论文摘要，可选题目与关键词 | 严重问题警告、逐项观察、问题清单及优先修改建议 |
+| [`bzd-problem-restatement`](skills/bzd-problem-restatement/) | 根据赛题生成问题重述，或对照原题检查已有重述 | 完整赛题；自查时另提供问题重述 | 研究背景、问题回顾、研究综述，或分级问题清单 |
+| [`bzd-problem-analysis-checker`](skills/bzd-problem-analysis-checker/) | 对照赛题检查问题分析的建模逻辑与章节边界 | 完整赛题、附件说明、已有问题分析 | 任务映射、联动核对、问题清单及修改优先级 |
 ## Skills 介绍
 
 ### BZD-review-paper
@@ -42,6 +44,21 @@ Skill 首先将摘要交给“非本研究方向的读者”进行独立阅读�
 如果研究问题、主要方法或关键结果存在实质性缺失，Skill 会首先输出严重警告；随后从模型与算法、量化结果、模型检验、创新表达、分问题结构、语言规范、关键词和篇幅风险等方面逐项检查，并列出最优先修改的内容。
 
 由于调用时不要求提供赛题和论文正文，对于“是否覆盖全部赛题”“数值是否与正文一致”等无法仅凭摘要判断的内容，Skill 会明确标记为“无法仅凭摘要核验”，避免作出没有依据的判断。
+### bzd-problem-restatement
+
+面向数学建模论文“问题重述”章节的生成与自查 Skill。
+
+生成模式下，用户只需提供完整赛题，Skill 即可在忠实保留题意、约束条件和任务边界的基础上，生成由研究背景、问题回顾和研究综述组成的问题重述。内容不会提前写入具体模型、算法、求解过程和计算结果，也不会虚构参考文献。
+
+自查模式下，用户提供原始赛题和自己撰写的问题重述，Skill 将检查任务是否遗漏、条件是否失真、是否照抄题目、是否提前泄露模型与结果，以及研究综述是否规范，并给出分级问题清单和修改建议。
+
+### bzd-problem-analysis-checker
+
+面向数学建模论文“问题分析”章节的专项自查 Skill。
+
+用户提供完整赛题、附件说明和自己撰写的问题分析后，Skill 将逐问检查任务理解、已知条件、输入输出、数据处理依据、模型类别判断、模型选用理由、问题间联动关系、验证思路以及章节边界。
+
+输出包括赛题任务映射、总体评价、逐问检查结果、跨问题联动核对、分级问题清单和修改优先级，帮助使用者发现问题分析中存在的逻辑跳跃、依据不足、模型堆砌和提前出现结果等问题。
 ### bzd-cumcm-school-awards
 
 基于2021—2025年高教社杯全国大学生数学建模竞赛国奖数据，查询高校历年一等奖、二等奖及国奖总数，并输出工作簿提供的2026年国奖预测和历史获奖队伍中的高频指导教师。
@@ -110,7 +127,21 @@ macOS/Linux：~/.codex/skills/
 使用 $bzd-modeling-ideas 分析以下完整赛题：<赛题路径>
 请生成贯穿全文的整体思路，并比较每一问的可行模型和选型理由。
 ```
+使用 $bzd-problem-analysis-checker 检查：
 
+原始赛题：<赛题文件路径>
+附件说明：<附件路径或附件说明>
+我的问题分析：<问题分析内容>
+使用 $bzd-problem-restatement 检查：
+
+原始赛题：<赛题文件路径>
+我的问题重述：<问题重述内容>
+### 生成问题重述
+
+```text
+使用 $bzd-problem-restatement，根据以下完整赛题生成问题重述：
+
+赛题：<赛题文件路径>
 ```text
 使用 $bzd-review-paper 评审：
 竞赛类型：<是否为高教社杯国赛或其他竞赛名称>
@@ -127,7 +158,11 @@ bzd-math-modeling-skills/
 ├── skills/
 │   ├── bzd-problem-translator/
 │   ├── bzd-modeling-ideas/
-│   └── bzd-review-paper/
+│   ├── bzd-review-paper/
+│   ├── bzd-abstract-checker/
+│   ├── bzd-cumcm-school-awards/
+│   ├── bzd-problem-restatement/
+│   └── bzd-problem-analysis-checker/
 └── integrations/
     └── claude-code/
 ```
