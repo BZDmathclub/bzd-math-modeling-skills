@@ -15,6 +15,7 @@
 | [`bzd-abstract-checker`](skills/bzd-abstract-checker/) | 仅输入摘要，检查独立阅读性及具体写作问题 | 数学建模论文摘要，可选题目与关键词 | 严重问题警告、逐项观察、问题清单及优先修改建议 |
 | [`bzd-problem-restatement`](skills/bzd-problem-restatement/) | 根据赛题生成问题重述，或对照原题检查已有重述 | 完整赛题；自查时另提供问题重述 | 研究背景、问题回顾、研究综述，或分级问题清单 |
 | [`bzd-problem-analysis-checker`](skills/bzd-problem-analysis-checker/) | 对照赛题检查问题分析的建模逻辑与章节边界 | 完整赛题、附件说明、已有问题分析 | 任务映射、联动核对、问题清单及修改优先级 |
+| [`bzd-model-assumption-checker`](skills/bzd-model-assumption-checker/) | 对照赛题诊断模型假设的合理性、依据及建模用途 | 完整赛题、模型假设，可选提供模型正文 | 逐条诊断、遗漏假设、验证要求及修改优先级 |
 ## Skills 介绍
 
 ### BZD-review-paper
@@ -51,7 +52,24 @@ Skill 首先将摘要交给“非本研究方向的读者”进行独立阅读�
 生成模式下，用户只需提供完整赛题，Skill 即可在忠实保留题意、约束条件和任务边界的基础上，生成由研究背景、问题回顾和研究综述组成的问题重述。内容不会提前写入具体模型、算法、求解过程和计算结果，也不会虚构参考文献。
 
 自查模式下，用户提供原始赛题和自己撰写的问题重述，Skill 将检查任务是否遗漏、条件是否失真、是否照抄题目、是否提前泄露模型与结果，以及研究综述是否规范，并给出分级问题清单和修改建议。
+### bzd-model-assumption-checker
 
+面向数学建模论文“模型假设”章节的专项自查 Skill。
+
+用户提供完整赛题和论文中的模型假设后，Skill 会从赛题中重建研究对象、任务要求、关键条件和核心因素，并逐条判断假设的来源、必要性、合理性、依据要求及后续建模用途。
+
+Skill 重点检查以下问题：
+
+- 是否遗漏题目明确给出的关键条件；
+- 是否通过假设删除了题目要求研究的核心因素；
+- 是否存在模型必然正确、指标必然全面等循环论证；
+- 数据假设是否与实际数据处理过程矛盾；
+- 分布、独立性、线性和平稳性等强假设是否具有依据；
+- 是否把数据处理操作或求解算法误写成模型假设；
+- 是否存在重复、空泛、过度理想化或没有后文用途的假设；
+- 每条假设是否能对应后续模型、参数、公式、约束、检验或局限分析。
+
+输出包括赛题关键前提核对、逐条诊断、遗漏假设候选、强假设验证要求、后文对应关系和修改优先级。
 ### bzd-problem-analysis-checker
 
 面向数学建模论文“问题分析”章节的专项自查 Skill。
@@ -101,10 +119,20 @@ macOS/Linux：~/.codex/skills/
 安装全部后，目录示例：
 
 ```text
-.codex/skills/
-├── bzd-problem-translator/
-├── bzd-modeling-ideas/
-└── bzd-review-paper/
+bzd-math-modeling-skills/
+├── README.md
+├── CHANGELOG.md
+├── skills/
+│   ├── bzd-problem-translator/
+│   ├── bzd-modeling-ideas/
+│   ├── bzd-review-paper/
+│   ├── bzd-abstract-checker/
+│   ├── bzd-cumcm-school-awards/
+│   ├── bzd-problem-restatement/
+│   ├── bzd-problem-analysis-checker/
+│   └── bzd-model-assumption-checker/
+└── integrations/
+    └── claude-code/
 ```
 
 ### Claude Code
