@@ -16,7 +16,7 @@
 | [`bzd-problem-restatement`](skills/bzd-problem-restatement/) | 根据赛题生成问题重述，或对照原题检查已有重述 | 完整赛题；自查时另提供问题重述 | 研究背景、问题回顾、研究综述，或分级问题清单 |
 | [`bzd-problem-analysis-checker`](skills/bzd-problem-analysis-checker/) | 对照赛题检查问题分析的建模逻辑与章节边界 | 完整赛题、附件说明、已有问题分析 | 任务映射、联动核对、问题清单及修改优先级 |
 | [`bzd-model-assumption-checker`](skills/bzd-model-assumption-checker/) | 对照赛题诊断模型假设的合理性、依据及建模用途 | 完整赛题、模型假设，可选提供模型正文 | 逐条诊断、遗漏假设、验证要求及修改优先级 |
-| [`bzd-model-assumption-checker`](skills/bzd-model-assumption-checker/) | 对照赛题诊断模型假设的合理性、依据及建模用途 | 完整赛题、模型假设，可选提供模型正文 | 逐条诊断、遗漏假设、验证要求及修改优先级 |
+
 ## Skills 介绍
 
 ### BZD-review-paper
