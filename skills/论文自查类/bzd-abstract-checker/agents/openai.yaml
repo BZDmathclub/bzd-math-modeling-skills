@@ -1,0 +1,7 @@
+interface:
+  display_name: "BZD 摘要自查"
+  short_description: "仅输入摘要，诊断数学建模摘要的独立性与具体问题"
+  brand_color: "#245B86"
+  default_prompt: "使用 $bzd-abstract-checker 检查以下数学建模论文摘要，指出具体问题和优先修改方向。"
+policy:
+  allow_implicit_invocation: true

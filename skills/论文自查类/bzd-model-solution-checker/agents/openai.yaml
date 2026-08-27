@@ -1,0 +1,6 @@
+interface:
+  display_name: "BZD 模型建立求解自查"
+  short_description: "检查模型建立、算法求解、结果检验与灵敏度分析闭环"
+  brand_color: "#1E66F5"
+  default_prompt: "使用 $bzd-model-solution-checker 对照完整赛题检查论文的模型建立、求解、模型检验和灵敏度分析板块。"
+
