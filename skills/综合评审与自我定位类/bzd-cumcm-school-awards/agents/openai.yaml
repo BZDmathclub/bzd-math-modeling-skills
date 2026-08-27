@@ -1,0 +1,4 @@
+interface:
+  display_name: "BZD 国赛高校国奖查询"
+  short_description: "查询高校近五年国奖、2026预测与高频指导教师"
+  default_prompt: "使用 $bzd-cumcm-school-awards 查询我的学校近五年国奖数据和2026年预测。"
