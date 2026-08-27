@@ -1,7 +1,0 @@
-interface:
-  display_name: "BZD 问题分析自查"
-  short_description: "对照赛题检查问题分析的建模逻辑、联动和章节边界"
-  brand_color: "#E47B2B"
-  default_prompt: "使用 $bzd-problem-analysis-checker 对照完整赛题检查我写的问题分析，并列出问题与修改优先级。"
-policy:
-  allow_implicit_invocation: true
