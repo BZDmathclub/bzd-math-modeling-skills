@@ -67,7 +67,6 @@
 | [`bzd-cumcm-school-awards`](skills/综合评审与自我定位类/bzd-cumcm-school-awards/) | 查询高校历史国奖数据并评估备赛距离 | 学校、赛区、竞赛经历和模拟情况 | 学校画像、国奖预测、省奖与国奖备赛建议 |
 
 ## 其他国赛前规划
-
 ```mermaid
 flowchart LR
     BZD["BZD数模社<br/><b>数学建模 Skills 合集</b><br/>覆盖理解、生成、自查与评审"]
@@ -76,14 +75,14 @@ flowchart LR
     GENERATE["② 生成类"]
     CHECK["③ 论文自查类"]
 
-    R_NOW["<b>当前 Skills</b><br/>bzd-review-paper：论文评分、位次与评委式建议<br/>bzd-cumcm-school-awards：学校国奖画像与备赛定位"]
-    R_UPDATE["<b>国赛前预计更新</b><br/>加入赛区难度、学校实力与竞争环境<br/>联动论文质量、赛区和学校情况优化预测"]
+    R_NOW["<div style='text-align:left'><b>当前 Skills</b><br/>bzd-review-paper：论文评分、位次与评委式建议<br/>bzd-cumcm-school-awards：学校国奖画像与备赛定位</div>"]
+    R_UPDATE["<div style='text-align:left'><b>国赛前预计更新</b><br/>加入赛区难度、学校实力与竞争环境<br/>联动论文质量、赛区和学校情况优化预测</div>"]
 
-    G_NOW["<b>当前 Skills</b><br/>bzd-problem-translator：逐句翻译赛题<br/>bzd-modeling-ideas：生成整体建模主线<br/>bzd-problem-restatement：生成问题重述<br/>bzd-ai-usage-disclosure：生成AI使用披露材料"]
-    G_UPDATE["<b>国赛前预计更新</b><br/>增加论文各板块生成 Skills<br/>增加绘图推荐、方案选择与绘图代码生成<br/>增加数模字典及同类模型推荐"]
+    G_NOW["<div style='text-align:left'><b>当前 Skills</b><br/>bzd-problem-translator：逐句翻译赛题<br/>bzd-modeling-ideas：评委视角的求解多模型建议集<br/>bzd-problem-restatement：生成问题重述<br/>bzd-ai-usage-disclosure：生成AI使用声明</div>"]
+    G_UPDATE["<div style='text-align:left'><b>国赛前预计更新</b><br/>增加论文各板块生成 Skills<br/>增加绘图推荐、方案选择与绘图代码生成<br/>增加数模字典及同类模型推荐</div>"]
 
-    C_NOW["<b>当前 Skills</b><br/>摘要、问题重述、问题分析、模型假设<br/>符号说明、模型建立与求解、参考文献与附录<br/>AI使用披露及完整论文综合自查"]
-    C_UPDATE["<b>国赛前预计更新</b><br/>增加 Agent 直出论文内容检查<br/>合并专项规则形成数模论文全文自查<br/>强化论文—代码—数据—结果一致性核验"]
+    C_NOW["<div style='text-align:left'><b>当前 Skills</b><br/>bzd-abstract-checker：摘要自查<br/>bzd-problem-restatement：问题重述自查<br/>bzd-problem-analysis-checker：问题分析自查<br/>bzd-model-assumption-checker：模型假设自查<br/>bzd-symbol-notation-checker：符号说明自查<br/>bzd-model-solution-checker：模型建立、求解、检验与灵敏度分析自查<br/>bzd-reference-appendix-checker：参考文献与附录自查<br/>bzd-ai-usage-disclosure：AI使用披露自查<br/>bzd-review-paper：完整论文综合自查</div>"]
+    C_UPDATE["<div style='text-align:left'><b>国赛前预计更新</b><br/>增加 Agent 直出论文内容检查<br/>合并专项规则形成数模论文全文自查<br/>强化论文—代码—数据—结果一致性核验</div>"]
 
     BZD --> REVIEW
     BZD --> GENERATE
