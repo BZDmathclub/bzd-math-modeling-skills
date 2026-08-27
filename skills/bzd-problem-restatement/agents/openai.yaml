@@ -1,8 +1,0 @@
-interface:
-  display_name: "BZD 问题重述"
-  short_description: "根据赛题生成问题重述，或对照原题检查已有重述"
-  brand_color: "#245B86"
-  default_prompt: "使用 $bzd-problem-restatement 根据完整赛题生成合规的问题重述，或对照原题检查我写的问题重述。"
-policy:
-  allow_implicit_invocation: true
-
