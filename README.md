@@ -81,7 +81,7 @@ flowchart LR
     G_NOW["<div style='text-align:left'><b>当前 Skills</b><br/>bzd-problem-translator：逐句翻译赛题<br/>bzd-modeling-ideas：评委视角的求解多模型建议集<br/>bzd-problem-restatement：生成问题重述<br/>bzd-ai-usage-disclosure：生成AI使用声明</div>"]
     G_UPDATE["<div style='text-align:left'><b>国赛前预计更新</b><br/>增加论文各板块生成 Skills<br/>增加绘图推荐、方案选择与绘图代码生成<br/>增加数模字典及同类模型推荐</div>"]
 
-    C_NOW["<div style='text-align:left'><b>当前 Skills</b><br/>bzd-abstract-checker：摘要自查<br/>bzd-problem-restatement：问题重述自查<br/>bzd-problem-analysis-checker：问题分析自查<br/>bzd-model-assumption-checker：模型假设自查<br/>bzd-symbol-notation-checker：符号说明自查<br/>bzd-model-solution-checker：模型建立、求解、检验与灵敏度分析自查<br/>bzd-reference-appendix-checker：参考文献与附录自查<br/>bzd-ai-usage-disclosure：AI使用披露自查<br/>bzd-review-paper：完整论文综合自查</div>"]
+    C_NOW["<div style='text-align:left'><b>当前 Skills</b><br/>bzd-abstract-checker：摘要自查;bzd-problem-restatement：问题重述自查;bzd-problem-analysis-checker：问题分析自查<br/>bzd-model-assumption-checker：模型假设自查;bzd-symbol-notation-checker：符号说明自查;bzd-model-solution-checker：模型建立、求解、检验与灵敏度分析自查<br/>bzd-reference-appendix-checker：参考文献与附录自查;bzd-ai-usage-disclosure：AI使用披露自查;bzd-review-paper：完整论文综合自查</div>"]
     C_UPDATE["<div style='text-align:left'><b>国赛前预计更新</b><br/>增加 Agent 直出论文内容检查<br/>合并专项规则形成数模论文全文自查<br/>强化论文—代码—数据—结果一致性核验</div>"]
 
     BZD --> REVIEW
