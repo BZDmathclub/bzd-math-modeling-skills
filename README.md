@@ -68,45 +68,44 @@
 
 ## 其他国赛前规划
 
-### 当前能力与国赛前更新路线图
-
 ```mermaid
-flowchart TB
-    A["用户输入赛题、论文或学校信息"]
+flowchart LR
+    BZD["BZD数模社<br/><b>数学建模 Skills 合集</b><br/>覆盖理解、生成、自查与评审"]
 
-    subgraph NOW["当前已上线能力"]
-        direction LR
-        N1["题意翻译<br/>bzd-problem-translator"]
-        N2["整体建模思路<br/>bzd-modeling-ideas"]
-        N3["板块生成<br/>问题重述 / AI使用披露"]
-        N4["论文专项自查<br/>摘要—重述—分析—假设—符号—模型—文献附录"]
-        N5["完整论文评审<br/>bzd-review-paper"]
-        N6["学校国奖画像与备赛定位<br/>bzd-cumcm-school-awards"]
-        N1 --> N2 --> N3 --> N4 --> N5 --> N6
-    end
+    REVIEW["① 综合评审与自我定位类"]
+    GENERATE["② 生成类"]
+    CHECK["③ 论文自查类"]
 
-    A --> N1
+    R_NOW["<b>当前 Skills</b><br/>bzd-review-paper：论文评分、位次与评委式建议<br/>bzd-cumcm-school-awards：学校国奖画像与备赛定位"]
+    R_UPDATE["<b>国赛前预计更新</b><br/>加入赛区难度、学校实力与竞争环境<br/>联动论文质量、赛区和学校情况优化预测"]
 
-    subgraph UPDATE["国赛前预期更新"]
-        direction LR
-        U1["综合评审升级<br/>赛区难度 + 学校情况 + 竞争环境"]
-        U2["生成能力升级<br/>论文各板块生成 + 绘图推荐与代码"]
-        U3["自查能力升级<br/>Agent全文检查 + 专项规则合并"]
-        U4["知识与资料升级<br/>数模字典 + 提示词 + 模板 + 评阅资料"]
-    end
+    G_NOW["<b>当前 Skills</b><br/>bzd-problem-translator：逐句翻译赛题<br/>bzd-modeling-ideas：生成整体建模主线<br/>bzd-problem-restatement：生成问题重述<br/>bzd-ai-usage-disclosure：生成AI使用披露材料"]
+    G_UPDATE["<b>国赛前预计更新</b><br/>增加论文各板块生成 Skills<br/>增加绘图推荐、方案选择与绘图代码生成<br/>增加数模字典及同类模型推荐"]
 
-    N5 --> U1
-    N3 --> U2
-    N4 --> U3
-    N2 --> U4
+    C_NOW["<b>当前 Skills</b><br/>摘要、问题重述、问题分析、模型假设<br/>符号说明、模型建立与求解、参考文献与附录<br/>AI使用披露及完整论文综合自查"]
+    C_UPDATE["<b>国赛前预计更新</b><br/>增加 Agent 直出论文内容检查<br/>合并专项规则形成数模论文全文自查<br/>强化论文—代码—数据—结果一致性核验"]
 
-    U1 --> F["更完整的数学建模竞赛全流程辅助体系"]
-    U2 --> F
-    U3 --> F
-    U4 --> F
+    BZD --> REVIEW
+    BZD --> GENERATE
+    BZD --> CHECK
+
+    REVIEW --> R_NOW --> R_UPDATE
+    GENERATE --> G_NOW --> G_UPDATE
+    CHECK --> C_NOW --> C_UPDATE
+
+    classDef hub fill:#172554,color:#ffffff,stroke:#1d4ed8,stroke-width:3px;
+    classDef category fill:#dbeafe,color:#1e3a8a,stroke:#3b82f6,stroke-width:2px;
+    classDef current fill:#f8fafc,color:#0f172a,stroke:#94a3b8,stroke-width:1.5px;
+    classDef update fill:#ecfdf5,color:#065f46,stroke:#10b981,stroke-width:2px;
+
+    class BZD hub;
+    class REVIEW,GENERATE,CHECK category;
+    class R_NOW,G_NOW,C_NOW current;
+    class R_UPDATE,G_UPDATE,C_UPDATE update;
 ```
 
 该路线图用于展示当前已经上线的能力与国赛前计划更新内容。具体上线顺序将根据实际开发和测试结果调整。
+### 当前能力与国赛前更新路线图
 
 ### 数模字典 Skill
 
