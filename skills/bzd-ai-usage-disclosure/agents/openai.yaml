@@ -1,8 +1,0 @@
-interface:
-  display_name: "BZD AI工具使用披露"
-  short_description: "生成并检查数学建模竞赛AI工具使用声明与匿名详情材料"
-  brand_color: "#2E5F8A"
-  default_prompt: "使用 $bzd-ai-usage-disclosure 根据真实AI使用记录生成或检查AI工具使用声明与详情材料。"
-policy:
-  allow_implicit_invocation: true
-
