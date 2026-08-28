@@ -2,6 +2,10 @@
 
 Build the rubric before evaluating the paper. The rubric must total exactly 100 points and be usable by another judge with substantially similar results.
 
+## 0. Fresh-construction isolation
+
+Treat every review as a fresh case. Before reading the paper's solution, use only the current request's problem statement and attachments to build the requirement matrix and rubric. Do not reuse a solution, numerical result, preferred model, score, or criticism remembered from earlier conversations or earlier reviews. Historical calibration records are structural references only. If prior material is explicitly supplied again in the current request, label it and decide whether it is legitimate evidence before using it.
+
 ## 1. Build from the supplied problem
 
 Derive the rubric from:
