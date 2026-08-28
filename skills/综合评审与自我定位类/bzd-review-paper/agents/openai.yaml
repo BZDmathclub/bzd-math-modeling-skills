@@ -1,4 +1,4 @@
 interface:
   display_name: "BZD-review-paper"
-  short_description: "区分国赛与小型竞赛，生成专属细则并评审得分位次"
-  default_prompt: "使用 $bzd-review-paper。先确认是否为高教社杯国赛，再根据赛题和论文制定百分制评分细则，按每项90%封顶评分，并使用对应竞赛规模的位次模型输出HTML报告。"
+  short_description: "独立制定细则，结合赛区学校与导师评估论文竞争力"
+  default_prompt: "使用 $bzd-review-paper。先确认是否为高教社杯国赛；若是，请收集本科组/高职高专组、赛区、学校全称和指导教师。只根据本次提供的题目重新制定百分制细则，不沿用历史解题记忆；按每项90%封顶评价论文质量，再分别计算省奖与国奖竞争修正分并输出HTML报告。"

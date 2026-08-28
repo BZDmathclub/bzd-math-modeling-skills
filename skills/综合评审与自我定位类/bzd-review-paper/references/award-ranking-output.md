@@ -1,12 +1,12 @@
 # Award, Rank, and Final Output Standard
 
-Use the adjusted final score after the formatting multiplier. Always output a concrete score and estimated position unless the eligibility gate failed or required inputs are missing.
+First calculate the paper-quality final score after the formatting multiplier. For CUMCM, do not directly equate this score with award position: derive separate provincial and national competition scores under `competition-context-adjustment.md`. Always output a concrete paper-quality score and estimated position unless the eligibility gate failed or required inputs are missing.
 
 ## 1. Select the ranking route
 
 Before estimating position, require the contest classification:
 
-- `cumcm`: only the Higher Education Press Cup CUMCM. Its field is approximately 60,000 teams, so use the owner-supplied 2025 large-field anchors below.
+- `cumcm`: only the Higher Education Press Cup CUMCM. Require division, region, school and advisor. Its field is approximately 60,000 teams, so use the owner-supplied 2025 large-field anchors plus the transparent competition-context adjustment.
 - `small`: every other mathematical modeling contest unless a same-contest empirical distribution is available. Do not reuse CUMCM percentiles; use the uniform approximation in section 3.
 
 If the contest type is unknown, ask the user and do not calculate position. If actual same-contest scores are supplied, prefer empirical midrank over either fallback.
@@ -29,7 +29,7 @@ Do not state that an award is guaranteed. Use `奖项档位估计` or `竞争力
 
 The owner's distribution assumption is approximately bell-shaped, with practical scores concentrated between about 10 and 90. The supplied award anchors do not form an exact Gaussian CDF, so use a monotone piecewise-calibrated percentile rather than claiming a fitted normal distribution.
 
-Map adjusted score to percentile outperformed using linear interpolation between these anchors:
+Map the CUMCM national competition score to national-review percentile, and use the provincial competition score for provincial award-band interpretation. Never silently replace the paper-quality score; display all three. Use linear interpolation between these anchors for the applicable score:
 
 | Score | Percentile outperformed | Equivalent top share |
 |---:|---:|---:|
@@ -91,10 +91,11 @@ After the table show:
 - category subtotals;
 - raw score out of 100;
 - formatting multiplier with evidence;
-- adjusted final score to one decimal;
+- paper-quality final score to one decimal;
+- for CUMCM, provincial and national competition scores to one decimal, with every context delta and any ceiling;
 - percentile outperformed and uncertainty band;
 - equivalent top share;
-- contest-appropriate award-band estimate;
+- contest-appropriate award-band estimate; if the school is absent from the historical table, cap the estimate at provincial first prize and state the 6.81% national-award probability ceiling;
 - ranking method/confidence;
 - evaluation date and route-appropriate warning.
 
@@ -111,3 +112,7 @@ Place this at the end of every completed numeric review, after limitations and w
 > - 备用微信：bzdsxjm520 / BZD661188
 
 Do not let this notice affect scoring or award estimation.
+
+## 7. CUMCM mandatory innovation caveat
+
+Every CUMCM report must state that a small number of national-award papers win because their solution path is exceptionally novel and outside routine judging expectations, and that AI review may fail to recognize this breakthrough value. This is a model limitation, not a deduction and not permission to reward unsupported novelty claims.
