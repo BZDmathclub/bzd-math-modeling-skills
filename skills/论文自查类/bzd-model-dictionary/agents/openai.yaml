@@ -1,0 +1,5 @@
+interface:
+  display_name: "BZD数模字典"
+  short_description: "查询模型字典并判断所选模型与题目数据是否匹配"
+  default_prompt: "使用 $bzd-model-dictionary。只依据本次提供的赛题、数据和所选模型进行独立判断，先查询字典记录，再用表格说明模型信息、适配条件、最终结论、替代模型和验证方案。"
+
