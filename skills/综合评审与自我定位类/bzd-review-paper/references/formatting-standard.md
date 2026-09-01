@@ -1,6 +1,8 @@
 # Mathematical Modeling Paper Formatting Standard
 
-Apply this standard in three stages: eligibility gate, 10-point formatting deductions, then overall presentation multiplier. Keep mandatory contest rules separate from recommended house style.
+Apply this standard in three stages: eligibility gate, normalized `[-10,10]` formatting score, then deterministic `0-1.00` format-quality coefficient. Keep mandatory contest rules separate from recommended house style.
+
+If the user has already run `bzd-paper-format-checker` on the same paper version, do not repeat this audit from scratch. Import its eligibility evidence and 15-point result, convert it with `atomic-deduction-scoring.md`, and recheck only changed or previously unverifiable items. Never deduct the same formatting defect twice.
 
 ## 1. Eligibility gate: no score if failed
 
@@ -16,11 +18,13 @@ Check these items before scoring. If a supplied artifact clearly violates any ap
 
 Only fail an item when the artifact proves the violation. Mark physical-paper properties, binding, unseen commitment/numbering pages or other unavailable evidence as `待人工核验`, not failed. When the user's contest differs, apply its supplied mandatory rules instead.
 
-## 2. Formatting score: 10 points with itemized deductions
+## 2. Formatting score: `-10` to `10` with itemized deductions
 
-Start at 10. Deduct 1-3 points for each distinct error occurrence or repeated error class, capped at 10 total deduction; the formatting score cannot be below 0.
+Start at 10. Deduct 1-3 points for each distinct error occurrence or repeated error class. Preserve deductions beyond 10 so that severe formatting can produce a negative score, but clamp the score used for coefficient mapping to no lower than `-10`:
 
-After calculating the ordinary formatting result, apply the universal criterion ceiling: `formatting earned = min(ordinary formatting result, 9.0)`. Label any ceiling-only difference as `评委满分保留（该项90%封顶）`; do not list it as a formatting error.
+`format_score = max(-10, 10 - Σ formatting_deductions)`
+
+For the raw 100-point rubric, the formatting category cannot contribute negatively and remains 90%-capped: `formatting earned = min(9.0, max(0, format_score))`. Label any ceiling-only difference as `评委满分保留（该项90%封顶）`; do not list it as a formatting error.
 
 - **1 point (minor):** isolated inconsistency that does not impede reading, such as one caption alignment issue, occasional spacing mismatch, or a small numbering defect.
 - **2 points (moderate):** repeated inconsistency, missing structural element, unclear unit/notation, broken cross-reference, weak citation form, or a defect that slows review.
@@ -28,21 +32,21 @@ After calculating the ordinary formatting result, apply the universal criterion 
 
 Group identical repeated defects into an error class unless their separate occurrences have independent impact. Do not deduct the same defect under abstract, formatting and model quality. Show an itemized ledger and the capped total.
 
-## 3. Overall presentation multiplier
+## 3. Deterministic format-quality coefficient
 
-Formatting defects can affect holistic judging beyond the 10-point category. After computing the raw 100-point score, apply exactly one multiplier based on the whole artifact:
+Calculate the coefficient only from `format_score`:
 
-| Multiplier | Condition |
-|---:|---|
-| 1.00 | Clean or only 1-2 isolated minor errors; coherent professional reading experience |
-| 0.95 | Several minor errors or one repeated moderate error class; noticeable but not disruptive |
-| 0.90 | Errors occur across multiple sections or several moderate classes; consistency and reading flow are clearly weakened |
-| 0.80 | Numerous repeated errors, one or more major classes, or figures/tables/equations/references repeatedly obstruct review |
-| 0.70 | Pervasive major formatting and structural problems; important content is often hard to locate, read or cross-check |
-| 0.60 | Severe document-wide disorder; many visuals/equations/references are unusable or the appendix/body relationship is difficult to verify |
-| 0.50 | Extreme but still technically judgeable presentation failure; understanding and verification require exceptional reviewer effort |
+`format_multiplier = clamp((format_score + 10) / 20, 0, 1.00)`
 
-Use `Final score = Raw score x presentation multiplier`, rounded to one decimal. Never reduce below 0 or above 100. Explain the chosen band with error counts/classes and concrete page-level evidence. Use the lowest applicable band when defects satisfy multiple bands. Do not interpolate arbitrary values between bands. Do not apply a multiplier below 1.00 merely because the paper uses a coherent house style different from the recommendations below. A paper that fails the eligibility gate receives no multiplier or score; `0.50` is reserved for a paper that remains eligible and technically reviewable.
+| Format score | Coefficient |
+|---:|---:|
+| -10 | 0.00 |
+| -5 | 0.25 |
+| 0 | 0.50 |
+| 5 | 0.75 |
+| 10 | 1.00 |
+
+Intermediate values use the same linear formula. Use `Final score = Raw score × format_multiplier`, rounded to one decimal. Never reduce below 0 or above 100. Show the format score, formula and resulting coefficient. Do not select or adjust the coefficient impressionistically. A paper that fails the eligibility gate receives no coefficient or numeric score.
 
 ## 4. Recommended house style, not mandatory
 
@@ -113,6 +117,6 @@ Report:
 
 1. eligibility gate table: item, status (`pass`, `fail`, `待人工核验`), evidence;
 2. itemized 1-3 point deduction ledger;
-3. formatting score `max(0, 10 - capped deductions)`;
-4. presentation multiplier and justification;
+3. formatting score `max(-10, 10 - total deductions)` and its nonnegative 90%-capped raw-score contribution;
+4. deterministic coefficient `(format_score + 10) / 20` and visible calculation;
 5. raw total and adjusted final total, unless gate failed.

@@ -2,10 +2,6 @@
 
 Build the rubric before evaluating the paper. The rubric must total exactly 100 points and be usable by another judge with substantially similar results.
 
-## 0. Fresh-construction isolation
-
-Treat every review as a fresh case. Before reading the paper's solution, use only the current request's problem statement and attachments to build the requirement matrix and rubric. Do not reuse a solution, numerical result, preferred model, score, or criticism remembered from earlier conversations or earlier reviews. Historical calibration records are structural references only. If prior material is explicitly supplied again in the current request, label it and decide whether it is legitimate evidence before using it.
-
 ## 1. Build from the supplied problem
 
 Derive the rubric from:
@@ -36,8 +32,10 @@ Use this required default framework:
 
 The rubric weights must still total 100, but every numeric criterion has a mandatory earned-score ceiling of 90% of its weight. For a criterion weighted `w`, record `0.90w` as its maximum earnable score. This judge-reserve rule applies to abstract, formatting, model work and supplementary quality. It is not evidence of a paper defect, must not be reallocated, and makes 90/100 the theoretical raw-score maximum.
 
+For each problem, divide its weight into `模型建立`, `模型求解`, and `结果与回答`, then freeze observable atomic checks inside each block. Score these blocks with [atomic-deduction-scoring.md](atomic-deduction-scoring.md): start from the 90% ceiling, deduct 1-3 points per unmet check, and set a fundamentally inconsistent block to zero. A 25-point problem may use 15/5/5, but the actual split must follow task difficulty and required deliverables.
+
 - **Abstract: exactly 10 points.** Read and apply `title-abstract-keywords.md`. Use its 3-point completed-abstract floor, lay-reader test, adaptive paragraph structure and 0-10 anchors.
-- **Formatting compliance: exactly 10 points.** Read and apply `formatting-standard.md`: eligibility gate, itemized 1-3 point deductions capped at 10, then the holistic presentation multiplier.
+- **Formatting compliance: exactly 10 nominal points.** Read and apply `formatting-standard.md`: eligibility gate, itemized 1-3 point deductions, normalized `[-10,10]` format score, nonnegative 90%-capped raw-score contribution, then the deterministic `0-1.00` coefficient.
 - **Model construction and solution: 70–75 points.** This must contain model assumptions, model construction, and model solution. Allocate most points to the explicit subquestions and their mathematical/computational completion.
 - **Problem-specific supplementary quality: 5–10 points.** Allocate the remainder needed to reach 100 among validation/sensitivity, result analysis, model evaluation, generalization, innovation, or another explicit deliverable. Do not create an irrelevant category merely to fill points.
 
@@ -85,7 +83,7 @@ Freeze the rubric only if all checks pass:
 - abstract equals 10 and formatting equals 10;
 - model assumptions, construction, and solution are explicit and together equal 70–75;
 - remaining categories equal 5–10 and are justified by the problem;
-- formatting eligibility has been checked before numeric scoring, and the presentation multiplier is declared before finalizing the adjusted total;
+- formatting eligibility has been checked before numeric scoring, and the deterministic coefficient calculation is shown before finalizing the adjusted total;
 - every explicit problem deliverable maps to at least one criterion;
 - every criterion maps to a source requirement or declared cross-cutting quality;
 - criteria are non-overlapping enough to avoid duplicate deductions;
