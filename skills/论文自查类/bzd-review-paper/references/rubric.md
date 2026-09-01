@@ -2,6 +2,8 @@
 
 Use these anchors only as fallback guidance. The problem-specific rubric and learned official rules control the actual weights. Score intermediate quality proportionally; do not default to the midpoint.
 
+Within each problem, score `模型建立`, `模型求解`, and `结果与回答` separately using [atomic-deduction-scoring.md](atomic-deduction-scoring.md). Do not assign an impressionistic block percentage: freeze atomic checks, start from the block's 90% ceiling, deduct 1-3 points per unmet item, and show the ledger. A block that fundamentally answers the wrong task receives zero; a different but valid and evidenced approach does not.
+
 ## Fixed-category anchors
 
 ### Abstract — 10 points
@@ -10,7 +12,7 @@ Read and apply [title-abstract-keywords.md](title-abstract-keywords.md) complete
 
 ### Formatting compliance — 10 points
 
-Read and apply [formatting-standard.md](formatting-standard.md) completely. Run its eligibility gate first. If eligible, start at 10 and deduct 1-3 per error, capped at a 10-point deduction. Then apply its overall presentation multiplier to the raw 100-point score. Do not double-count title/keyword defects already considered under the abstract/front-matter review.
+Read and apply [formatting-standard.md](formatting-standard.md) completely. Run its eligibility gate first. If eligible, start at 10 and deduct 1-3 per error, retaining severe deductions down to a normalized score of -10. Convert that score linearly to the `0-1.00` format-quality coefficient and apply it to the raw 100-point score. Do not double-count title/keyword defects already considered under the abstract/front-matter review.
 
 | Dimension | Weight | Full-credit evidence | Typical deductions |
 |---|---:|---|---|

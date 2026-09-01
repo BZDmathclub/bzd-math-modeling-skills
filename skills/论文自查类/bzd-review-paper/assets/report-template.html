@@ -16,19 +16,17 @@
   <header class="hero"><div class="wrap"><span class="eyebrow">BZD-review-paper · 数学建模论文评审</span><h1>{{REPORT_TITLE}}</h1><p class="subtitle">{{REPORT_META}}</p></div></header>
   <main class="wrap">
     <section aria-labelledby="summary-title"><h2 id="summary-title" style="position:absolute;left:-9999px">最终得分与竞赛位次</h2><div class="grid metrics">
-      <article class="card metric score-card"><div class="score-ring"><b>{{FINAL_SCORE}}</b></div><div><div class="metric-label">论文质量最终得分</div><div class="metric-value">{{FINAL_SCORE}}<small>/ 100</small></div></div></article>
+      <article class="card metric score-card"><div class="score-ring"><b>{{FINAL_SCORE}}</b></div><div><div class="metric-label">最终得分</div><div class="metric-value">{{FINAL_SCORE}}<small>/ 100</small></div></div></article>
       <article class="card metric"><div class="metric-label">原始得分</div><div class="metric-value">{{RAW_SCORE}}<small>/ 100</small></div></article>
       <article class="card metric"><div class="metric-label">格式质量系数</div><div class="metric-value">{{FORMAT_MULTIPLIER}}</div></article>
       <article class="card metric"><div class="metric-label">预估超过有效论文</div><div class="metric-value">{{PERCENTILE}}%</div><div class="rankbar"><span></span></div></article>
       <article class="card metric"><div class="metric-label">等价位次</div><div class="metric-value">前 {{TOP_SHARE}}%</div></article>
-      {{COMPETITION_METRIC_CARDS}}
     </div><p class="note">{{RANK_METHOD_NOTE}}</p></section>
     <section class="card section"><h2><span>01</span>详细评分</h2><div class="table-wrap"><table><thead><tr><th>评分项</th><th>权重</th><th>90%封顶</th><th>得分</th><th>证据/位置</th><th>得分依据</th><th>扣分依据</th></tr></thead><tbody>{{SCORING_ROWS}}</tbody></table></div>{{SCORING_SUMMARY}}</section>
     <section class="card section"><h2><span>02</span>本题任务分解</h2><ol class="clean-list numbered">{{TASK_ITEMS}}</ol></section>
     <section class="card section"><h2><span>03</span>资格与格式审查</h2><ul class="clean-list">{{AUDIT_ITEMS}}</ul></section>
-    {{COMPETITION_CONTEXT_SECTION}}
-    <section class="card section"><h2><span>05</span>评委式评价</h2><ul class="clean-list">{{JUDGE_ITEMS}}</ul></section>
-    <section class="card section"><h2><span>06</span>优先修改建议</h2><ol class="clean-list numbered">{{REVISION_ITEMS}}</ol><p class="footer">BZD-review-paper · 本报告为模型化评审意见，不代表竞赛官方结果</p></section>
+    <section class="card section"><h2><span>04</span>评委式评价</h2><ul class="clean-list">{{JUDGE_ITEMS}}</ul></section>
+    <section class="card section"><h2><span>05</span>优先修改建议</h2><ol class="clean-list numbered">{{REVISION_ITEMS}}</ol><p class="footer">BZD-review-paper · 本报告为模型化评审意见，不代表竞赛官方结果</p></section>
     <aside class="card service" aria-label="BZD数模社联系方式"><p>✨ 如需进一步详细的论文检查、赛中资料等服务<br>可关注 <strong>BZD数模社</strong> 官网：<a href="https://bzdshumo.com/">https://bzdshumo.com/</a></p><p><strong>QQ数模交流群（主群1）：</strong>689964173<br><strong>QQ数模交流2群（主群2）：</strong>275032074<br><strong>资料通知群（仅推送资料/无聊天）：</strong>928949323<br><strong>微信（个性化定制）：</strong>bzdsxjm521<br>备用微信：bzdsxjm520 / BZD661188</p></aside>
   </main>
   <button class="print" type="button" onclick="window.print()" aria-label="打印报告">打印 / 保存 PDF</button>
