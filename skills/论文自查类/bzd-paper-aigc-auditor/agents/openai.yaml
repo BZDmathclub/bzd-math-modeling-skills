@@ -1,4 +1,0 @@
-interface:
-  display_name: "BZD 数模论文 AI 痕迹审计"
-  short_description: "逐章评估数学建模论文的AI写作、模板化建模与人工核验风险"
-  default_prompt: "使用 $bzd-paper-aigc-auditor 检查这篇数学建模论文的AI写作痕迹和模板化建模风险，并逐章给出证据与修改建议。"
