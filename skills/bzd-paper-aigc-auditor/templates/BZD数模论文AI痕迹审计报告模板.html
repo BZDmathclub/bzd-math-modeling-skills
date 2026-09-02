@@ -203,7 +203,7 @@
             border-bottom: none;
         }
 
-        /* ===== Badges & Risk Indicators ===== */
+        /* ===== Badges ===== */
         .badge {
             display: inline-block;
             padding: 6px 12px;
@@ -413,23 +413,6 @@
             border-left: 2px solid var(--gray-light);
         }
 
-        /* ===== Modification Table ===== */
-        .modification-table {
-            font-size: 12px;
-            margin: 10px 0;
-        }
-
-        .modification-table tr td:first-child {
-            color: var(--danger);
-            font-weight: 700;
-            width: 40%;
-        }
-
-        .modification-table tr td:nth-child(2) {
-            color: var(--success);
-            width: 60%;
-        }
-
         /* ===== Version Content ===== */
         .version-content {
             display: none;
@@ -486,36 +469,20 @@
             .version-tabs { gap: 10px; }
             .version-tabs button { padding: 9px 16px; font-size: 12px; }
         }
-
-        /* ===== Print Page Break ===== */
-        .page-break {
-            page-break-after: always;
-            margin-bottom: 40px;
-            padding-bottom: 40px;
-            border-bottom: 2px dashed var(--border);
-        }
-
-        /* ===== Text Utilities ===== */
-        .text-center { text-align: center; }
-        .text-right { text-align: right; }
-        .mt-10 { margin-top: 10px; }
-        .mt-20 { margin-top: 20px; }
-        .mb-10 { margin-bottom: 10px; }
-        .mb-20 { margin-bottom: 20px; }
     </style>
 </head>
 <body>
     <header>
-        <h1>📊 BZD数学建模论文AI痕迹审计报告</h1>
-        <p>基于两层递进框架 | 学术科研级精细分析 | v2.0</p>
+        <h1>🔐 BZD数学建模论文AI痕迹审计报告 v2.0</h1>
+        <p>两层递进式检查 | 逐部分详细分析 | 学术科研级审计</p>
         <div class="version-tabs">
-            <button class="active" onclick="switchVersion('brief')">快速诊断版</button>
-            <button onclick="switchVersion('complete')">完整审查版</button>
+            <button class="active" onclick="switchVersion('brief')">📊 简洁诊断版</button>
+            <button onclick="switchVersion('complete')">📋 完整审查版</button>
         </div>
     </header>
 
     <div class="container">
-        <!-- 快速诊断版 -->
+        <!-- 简洁诊断版 -->
         <div id="brief" class="version-content active">
             <section>
                 <h2>核心结论</h2>
