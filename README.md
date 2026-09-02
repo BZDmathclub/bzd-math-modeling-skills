@@ -103,7 +103,8 @@
 | 8 | [`bzd-ai-usage-disclosure`](skills/论文自查类/bzd-ai-usage-disclosure/) | AI工具使用声明与使用详情 | 论文、真实AI使用记录、已有披露材料 | 完整性、一致性、匿名性和责任边界检查 |
 | 9 | [`bzd-reference-appendix-checker`](skills/论文自查类/bzd-reference-appendix-checker/) | 参考文献与附录 | 论文、参考文献、附录、程序和支撑材料 | 引用与附录检查、风险等级和修改建议 |
 | 10 | [`bzd-model-dictionary`](skills/论文自查类/bzd-model-dictionary/) | 模型选型及适用性 | 赛题、数据、候选模型和求解思路 | 字典信息、适配性结论、缺陷、检验方法和替代模型 |
-| 11 | [`bzd-review-paper`](skills/论文自查类/bzd-review-paper/) | 完整论文综合评审 | 竞赛类型、完整赛题和完整论文 | 综合得分、格式系数、预估位次、评委评价和修改顺序 |
+|11 | [`bzd-paper-aigc-auditor`](skills/论文自查类/bzd-paper-aigc-auditor/) | 论文AI痕迹与建模模板化审计 | 完整数模论文；可选赛题、代码、数据和AI使用记录 | AI风格风险区间、逐板块证据、模型真实性分类和修改建议 |
+| 12| [`bzd-review-paper`](skills/论文自查类/bzd-review-paper/) | 完整论文综合评审 | 竞赛类型、完整赛题和完整论文 | 综合得分、格式系数、预估位次、评委评价和修改顺序 |
 
 ### 四、数据查询与备赛辅助类
 
