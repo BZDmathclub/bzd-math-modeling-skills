@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BZD数模社 | 论文AI痕迹自查指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: #f5f5f5;
+        }
+        header {
+            background: linear-gradient(135deg, #003366 0%, #004d99 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        section {
+            margin-bottom: 40px;
+        }
+        h2 {
+            color: #003366;
+            border-bottom: 3px solid #003366;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        h3 {
+            color: #0066cc;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .checklist {
+            background: #f9f9f9;
+            padding: 20px;
+            border-left: 4px solid #0066cc;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .checklist label {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        .checklist input[type="checkbox"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        table th {
+            background: #003366;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        table tr:hover {
+            background: #f0f5ff;
+        }
+        .risk-low {
+            background: #E8F5E9;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .risk-mid {
+            background: #FFF3E0;
+            border-left: 4px solid #FF9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .risk-high {
+            background: #FFEBEE;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .code-block {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+        .tips {
+            background: #E3F2FD;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .tips strong {
+            color: #1565c0;
+        }
+        .highlight {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        .good {
+            color: #388e3c;
+            font-weight: bold;
+        }
+        footer {
+            background: #f5f5f5;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            margin-top: 30px;
+            border-top: 1px solid #ddd;
+            font-size: 12px;
+        }
+        .step-number {
+            display: inline-block;
+            background: #0066cc;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        details {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            cursor: pointer;
+        }
+        summary {
+            color: #0066cc;
+            font-weight: bold;
+            user-select: none;
+        }
+        summary:hover {
+            color: #003366;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🔍 BZD数模社论文AI痕迹自查指南</h1>
+        <p>学生版 | 5分钟快速自检清单</p>
+    </header>
+
+    <div class="container">
+        <!-- 第一部分：快速诊断 -->
+        <section>
+            <h2>📋 必查项：5分钟快速诊断</h2>
+            <p style="color: #666; margin-bottom: 20px;">以下5个问题是论文是否涉及AI拼装的关键指标。逐一检查，勾选完成。</p>
+
+            <div class="checklist">
+                <label>
+                    <input type="checkbox">
+                    <strong>Q1：高频连接词是否过多？</strong><br>
+                    <span style="margin-left: 25px; color: #666; font-size: 13px;">
+                    检查标志："综上所述、进一步、此外"等在全文出现频率。<br>
+                    正常范围：&lt;20% | 异常：&gt;25%<br>
+                    找不到：请按"第二部分"的详细步骤操作
+                    </span>
+                </label>
+            </div>
+
+            <div class="checklist">
+                <label>
+                    <input type="checkbox">
+                    <strong>Q2：是否有排比句后面直接跟模糊评价？</strong><br>
+                    <span style="margin-left: 25px; color: #666; font-size: 13px;">
+                    例：❌ "模型的优点是准确性高、鲁棒性强、计算速度快"<br>
+                    例：✓ "满足约束：(1)p≥0.30m，(2)R&lt;4.5m，(3)v≤2m/s"<br>
+                    如果找到❌ 式排比，标记为"高风险"
+                    </span>
+                </label>
+            </div>
+
+            <div class="checklist">
+                <label>
+                    <input type="checkbox">
+                    <strong>Q3：模型选择中是否说明了"为什么适合本题"？</strong><br>
+                    <span style="margin-left: 25px; color: #666; font-size: 13px;">
+                    例：❌ "采用SAT算法，具有高准确性"<br>
+                    例：✓ "本题的碰撞对象是凸多边形（≤3个），故选SAT，时间复杂度O(n)"<br>
+                    每个模型都要能回答"为什么"
+                    </span>
+                </label>
+            </div>
+
+            <div class="checklist">
+                <label>
+                    <input type="checkbox">
+                    <strong>Q4：每个参数都能追溯来源吗？</strong><br>
+                    <span style="margin-left: 25px; color: #666; font-size: 13px;">
+                    来源只能是三种：赛题 | 前问推导 | 物理约束<br>
+                    如果参数无来源说明（"取值X""设定为Y"），标记为"幽灵参数"
+                    </span>
+                </label>
+            </div>
+
+            <div class="checklist">
+                <label>
+                    <input type="checkbox">
+                    <strong>Q5：问间对接是否有明确的数据流说明？</strong><br>
+                    <span style="margin-left: 25px; color: #666; font-size: 13px;">
+                    例：❌ "基于前问的结果..."（模糊）<br>
+                    例：✓ "Q2求得t*=412.474s，将其代入Q3的初值条件..."（明确）<br>
+                    每个跨问处都要有"用了什么数据、用到哪里"的说明
+                    </span>
+                </label>
+            </div>
+
+            <div class="risk-low">
+                <strong>✅ 五个都勾上了？</strong><br>
+                恭喜！你的论文在AI痕迹防控上做得很好，可以安心提交。
+            </div>
+
+            <div class="risk-mid">
+                <strong>⚠️ 有2-3个没勾上？</strong><br>
+                需要按"第二部分"的详细步骤逐一改进，不着急，有现成的修改清单。
+            </div>
+
+            <div class="risk-high">
+                <strong>❌ 有3个以上没勾上？</strong><br>
+                请进入"第二部分"进行深度自检，可能涉及系统性的论文改组。
+            </div>
+        </section>
+
+        <!-- 第二部分：高频陷阱对照 -->
+        <section>
+            <h2>⚠️ 高频陷阱：找出你论文中的问题</h2>
+            <p style="color: #666; margin-bottom: 20px;">以下是AI论文和人工论文的对照表。在你的论文中逐一查找，有则改。</p>
+
+            <h3>陷阱1：连接词堆砌</h3>
+            <table>
+                <tr>
+                    <th style="width: 20%;">陷阱</th>
+                    <th style="width: 40%;">❌ 错误示例</th>
+                    <th style="width: 40%;">✓ 改进示例</th>
+                </tr>
+                <tr>
+                    <td>过多的"此外、与此同时、进一步"</td>
+                    <td>"采用SAT算法。此外，该算法具有高准确性。与此同时，计算效率也很高。进一步验证了模型的鲁棒性。"</td>
+                    <td>"采用SAT算法判定凸多边形碰撞。本题的3个碰撞对象（磁盘、板）均为凸形，故SAT的时间复杂度仅为O(3)。相比GJK的O(n²)，计算速度提升15倍（见表8）。"</td>
+                </tr>
+                <tr>
+                    <td>"综上所述"频繁出现</td>
+                    <td>综上所述，模型有效。综上所述，方法可行。综上所述，结果合理。</td>
+                    <td>综上所述，在螺距范围[0.30-0.56]m内，该模型的误差<0.1%，满足精度要求（见表X）。</td>
+                </tr>
+            </table>
+
+            <div class="tips">
+                <strong>💡 自检技巧：</strong><br>
+                用Ctrl+F搜索关键词"综上所述、此外、进一步、与此同时"，如果出现次数>3，需要删除或补充数据。
+            </div>
+
+            <h3>陷阱2：拔高词无据</h3>
+            <table>
+                <tr>
+                    <th style="width: 30%;">拔高词</th>
+                    <th style="width: 35%;">❌ 错误写法</th>
+                    <th style="width: 35%;">✓ 改进写法</th>
+                </tr>
+                <tr>
+                    <td>具有较强的鲁棒性</td>
+                    <td>"结果具有较强的鲁棒性"</td>
+                    <td>"参数±10%变化时，结果偏差<0.1%，具有较强的鲁棒性"</td>
+                </tr>
+                <tr>
+                    <td>显著提高/显著优势</td>
+                    <td>"该方法显著提高了精度"</td>
+                    <td>"相比线性搜索，计算速度提升3倍；相比暴力搜索，代码简洁50%"</td>
+                </tr>
+                <tr>
+                    <td>具有很好的适用性</td>
+                    <td>"该模型具有很好的适用性"</td>
+                    <td>"该模型在螺距[0.30-0.56]m范围内有效；若扩大至[0-1]m需分段处理"</td>
+                </tr>
+            </table>
+
+            <div class="tips">
+                <strong>💡 自检技巧：</strong><br>
+                搜索"高、强、好、显著、重要、优势"等词，后面如果没有跟具体数字（%、倍数、范围），就是高风险。
+            </div>
+
+            <h3>陷阱3：模型选择论证不明确</h3>
+            <table>
+                <tr>
+                    <th style="width: 25%;">关键点</th>
+                    <th style="width: 37.5%;">❌ 错误示例</th>
+                    <th style="width: 37.5%;">✓ 改进示例</th>
+                </tr>
+                <tr>
+                    <td>模型名称vs实现细节</td>
+                    <td>"采用改进的遗传算法"（改进什么没说）</td>
+                    <td>"采用标准遗传算法，Pc=0.8, Pm=0.01, 世代数=500，参考文献[X]"</td>
+                </tr>
+                <tr>
+                    <td>选择理由vs本题特性</td>
+                    <td>"SAT算法精度高、效率高"（与谁比）</td>
+                    <td>"本题的碰撞对象数≤3且都是凸多边形，SAT的O(3)复杂度足够；相比蛮力搜索O(n²)，速度快15倍"</td>
+                </tr>
+                <tr>
+                    <td>替代方案vs选择</td>
+                    <td>（没有提及其他方法）</td>
+                    <td>"考虑过线性搜索O(n)需50次迭代、三叉搜索O(log₃ n)代码复杂；最终选二分搜索O(log n)，平衡精度和复杂度"</td>
+                </tr>
+            </table>
+
+            <h3>陷阱4：参数来源不明</h3>
+            <table>
+                <tr>
+                    <th style="width: 30%;">参数类型</th>
+                    <th style="width: 35%;">❌ 错误写法</th>
+                    <th style="width: 35%;">✓ 正确写法</th>
+                </tr>
+                <tr>
+                    <td>赛题直接给出</td>
+                    <td>"螺距为0.55m"</td>
+                    <td>"螺距p=0.55m（*来自赛题第1问）"</td>
+                </tr>
+                <tr>
+                    <td>前问推导</td>
+                    <td>"停止时刻为412.47s"</td>
+                    <td>"停止时刻t*=412.474s（*来自问2的公式(11)的数值求解）"</td>
+                </tr>
+                <tr>
+                    <td>物理约束</td>
+                    <td>"转向半径限制为4.5m"</td>
+                    <td>"转向半径R=4.5m（*由调头空间直径9m的几何约束推导）"</td>
+                </tr>
+            </table>
+
+            <div class="tips">
+                <strong>💡 自检技巧：</strong><br>
+                建立"参数溯源表"（见下方），逐个参数标注来源。如果有参数标注不上，就是"幽灵参数"，高风险！
+            </div>
+        </section>
+
+        <!-- 第三部分：参数溯源表模板 -->
+        <section>
+            <h2>📊 参数溯源表（必填）</h2>
+            <p style="color: #666; margin-bottom: 20px;">复制下表，填入你论文中的所有参数。每个参数都要能追溯到赛题、前问或约束。</p>
+
+            <div class="code-block">
+| 参数 | 符号 | 数值 | 来源 | 位置 | 是否可追溯 |
+|---|---|---|---|---|---|
+| 螺距 | p | 0.55m | 赛题 | 摘要第2行 | ✓ |
+| 停止时刻 | t* | 412.47s | Q2推导 | P10公式(11) | ✓ |
+| 转向半径 | R | 4.5m | 几何约束 | P12图10 | ✓ |
+| ... | ... | ... | ... | ... | ... |
+            </div>
+
+            <p style="color: #d32f2f; margin-top: 15px;"><strong>⚠️ 重要：</strong>如果有参数无法填入"来源"一列（出现"？"），这就是"幽灵参数"，需要立即补充说明或删除。</p>
+        </section>
+
+        <!-- 第四部分：最易得分的改进 -->
+        <section>
+            <h2>🎯 最易得分的改进（Top 3）</h2>
+            <p style="color: #666; margin-bottom: 20px;">如果你的论文有问题，优先做这三件事，效果最好。</p>
+
+            <h3><span class="step-number">1</span> 补充参数溯源表</h3>
+            <p>在附录或符号表后补充一个"参数溯源表"，标注每个参数的来源：赛题/前问/物理约束</p>
+            <div class="tips">
+                <strong>为什么重要：</strong><br>
+                这直接回答了"你的模型参数从哪来"的问题，是最直观的"人工论文"证明。
+            </div>
+
+            <h3><span class="step-number">2</span>修改模型选择后的论述</h3>
+            <p>在每个模型选择后补充一句：</p>
+            <div class="code-block">
+"因为本题的[数据特征]，所以选[模型]，相比[替代方案]有[优势]"
+
+例：
+"因为本题的碰撞对象都是凸多边形(数量≤3)，所以选SAT算法，
+时间复杂度O(n)，相比蛮力搜索的O(n²)快15倍"
+            </div>
+
+            <h3><span class="step-number">3</span>删除或补充高频连接词</h3>
+            <p>用Ctrl+F搜索"综上、此外、进一步"：</p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>❌ 直接删除没有实质内容的连接词</li>
+                <li>✓ 连接词后补充具体数据、约束或结果</li>
+            </ul>
+
+            <div class="risk-low">
+                <strong>💚 做完这三件事，论文AI风险会从"中"降到"低"。</strong>
+            </div>
+        </section>
+
+        <!-- 第五部分：自检流程图 -->
+        <section>
+            <h2>🔄 自检流程（完整版，30分钟）</h2>
+
+            <details>
+                <summary>点击展开完整的30分钟自检步骤</summary>
+
+                <div style="margin-top: 15px; padding: 15px; background: #f9f9f9; border-radius: 4px;">
+
+                    <h4>第一阶段：语言特征扫描（15分钟）</h4>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>连接词扫描</strong><br>
+                            用Ctrl+F搜索："综上、此外、进一步、与此同时、可以看出"<br>
+                            统计出现次数 → 计算密度 = 次数 / 全文句数<br>
+                            记录：密度XX%，判定：低/中/高
+                        </li>
+                        <li><strong>排比句标记</strong><br>
+                            浏览全文，找出3项以上的排比句<br>
+                            检查排比后是否有量化数据<br>
+                            记录：共XX处排比，其中YY处无具体数据
+                        </li>
+                        <li><strong>被动句统计</strong><br>
+                            浏览全文，粗略统计被动句占比（10-20%正常）<br>
+                            记录：被动句占比XX%，判定：正常/异常
+                        </li>
+                        <li><strong>拔高词检查</strong><br>
+                            搜索："高、强、好、显著、重要"<br>
+                            检查这些词后面是否都有数字或对比<br>
+                            记录：共XX处拔高词，其中YY处无数据支撑
+                        </li>
+                    </ol>
+
+                    <h4 style="margin-top: 20px;">第二阶段：建模逻辑检查（10分钟）</h4>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>逐问建立"三问法"表</strong><br>
+                            对Q1-Q5，逐一回答：
+                            <ul style="margin: 10px 0 10px 20px;">
+                                <li>问1：本问的目标和约束是什么？</li>
+                                <li>问2：本题的数据/几何特征是什么？</li>
+                                <li>问3：为什么选这个模型而不选替代方案？</li>
+                            </ul>
+                            如果三个问都能清晰回答 → 低风险<br>
+                            如果任何一个问无法清晰回答 → 高风险
+                        </li>
+                        <li><strong>参数溯源表填写</strong><br>
+                            列出论文中的所有参数<br>
+                            标注来源：赛题 / 前问 / 约束<br>
+                            如果有参数无法标注 → 高风险
+                        </li>
+                        <li><strong>模型常用性判定</strong><br>
+                            检查是否用到：深度学习、强化学习、蚁群算法等AI高频模型<br>
+                            如果有 → 直接判为高风险（可能无法通过审查）
+                        </li>
+                    </ol>
+
+                    <h4 style="margin-top: 20px;">第三阶段：汇总判定（5分钟）</h4>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>语言特征：低/中/高 + 3个数字指标（连接词密度、排比数、拔高词数）</li>
+                        <li>建模逻辑：低/中/高 + 三问法通过率、参数溯源完成率</li>
+                        <li>综合判定：<br>
+                            两项都"低" → 🟢低风险，可提交<br>
+                            一项"中" → 🟡中低风险，需改进<br>
+                            两项都"中"或有"高" → 🟠中风险或以上，深度改进
+                        </li>
+                    </ul>
+
+                </div>
+            </details>
+        </section>
+
+        <!-- 常见问答 -->
+        <section>
+            <h2>❓ 常见问答</h2>
+
+            <h3>Q1：我的论文用了某个复杂的模型，是不是就是AI论文？</h3>
+            <p><strong>A：不一定。</strong>关键是你能否清晰地解释"为什么这个模型适合本题"。<br>
+            如果能说出数据特征、为什么不用其他方法、复杂度的收益，就是正常论文。<br>
+            如果只说"模型精度高、效率高"，就是AI论文。</p>
+
+            <h3>Q2：参数来源必须是这三种吗？</h3>
+            <p><strong>A：是的。</strong>参数来源只能追溯到：<br>
+            • 赛题直接给出<br>
+            • 前问的数值或推导结果<br>
+            • 物理约束或几何限制<br>
+            任何超出这三种的参数都是"幽灵参数"。</p>
+
+            <h3>Q3：连接词完全不能用吗？</h3>
+            <p><strong>A：可以用，但要适度。</strong>连接词<15%是正常的，>25%就是过度。<br>
+            关键是连接词后面要有具体内容。<br>
+            ❌ "此外，该算法具有高准确性"（无数据）<br>
+            ✓ "此外，在螺距±5%扰动下，结果精度维持10^-12 m级别"（有数据）</p>
+
+            <h3>Q4：自定义模型会不会被判为AI？</h3>
+            <p><strong>A：不会，只要有明确的问题驱动。</strong>如果你能说清楚：<br>
+            • 为什么要自定义（现有模型不适用）<br>
+            • 推导过程（基于什么几何或物理约束）<br>
+            • 与标准模型的区别<br>
+            那就不是AI拼装，是创新建模。</p>
+
+            <h3>Q5：这份指南和正式的AIGC检测有什么区别？</h3>
+            <p><strong>A：本指南是AI风格判断，不是AI生成鉴定。</strong><br>
+            • 本指南：基于论文的语言和逻辑特征，判断是否有AI拼装的痕迹<br>
+            • 正式AIGC检测：通过文本相似度、特征向量等技术，鉴定是否由AI生成<br>
+            两者可以互补，但都不是身份鉴定。</p>
+        </section>
+
+        <!-- 最后的建议 -->
+        <section>
+            <h2>💡 最后的建议</h2>
+
+            <div class="risk-low">
+                <strong>✅ 数学建模竞赛的本质：</strong><br>
+                用最简洁、最有效的模型解决实际问题。不是追求高深复杂的方法，而是以最少的代价得到最好的结果。<br><br>
+                如果你的论文体现了这一点——清晰的问题分析、合理的模型选择、完整的论证链条、可追溯的参数——那它就是一篇好论文，无论是否涉及AI都不重要，因为建模思路本身是坚实的。
+            </div>
+
+            <div style="background: #E3F2FD; padding: 15px; margin: 15px 0; border-radius: 4px; border-left: 4px solid #2196F3;">
+                <strong>🔒 数据安全提醒：</strong><br>
+                本自查指南仅供个人学习使用。论文内容涉及隐私，请勿分享给无关人员。
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>📌 <strong>BZD数模社</strong> | 本指南为学习和教学材料，不构成官方检测结果</p>
+        <p>如有问题或建议，请联系BZD数模社</p>
+        <p style="margin-top: 10px; opacity: 0.7;">版本：v2.0 | 最后更新：2024年 | © BZD数学建模社</p>
+    </footer>
+</body>
+</html>
