@@ -1,578 +1,937 @@
-# BZD数模论文AI痕迹审计 - 离线Prompt指南
+# BZD 数模论文 AI 痕迹审计 · 完整离线 Prompt
 
-## 📋 使用说明
-
-**适用场景：** 当无法使用Claude Code或Codex的skill时，用户可以将本文档和论文一起发给任何AI（ChatGPT、Claude Web、Gemini等），AI将按照此指南进行分析并输出HTML报告。
-
-**使用方法：**
-1. 复制本文档全部内容
-2. 连同论文内容一起发给AI
-3. AI将生成HTML格式的审计报告
-4. 用浏览器打开HTML文件查看结果
+> **v2.2 严格判分版** | BZD 数模社制作
+> 本文档是一份**自包含的审计指令**。无需安装任何 skill，把本文档全文
+> 连同你的论文一起发给任意支持长文本的 AI（Claude / ChatGPT / Gemini /
+> Kimi / DeepSeek / 豆包等），即可获得一份带标红的 HTML 审计报告。
 
 ---
 
-## 🎯 审计目标
+## 📋 怎么用（三步）
 
-对数学建模竞赛论文进行两层递进式AI痕迹检测：
-- **第一层（权重60%）：** 语言特征扫描 + 其他四维评价
-- **第二层（权重40%）：** 建模逻辑深度审查
+**第 1 步**：复制本文档**全部内容**，粘贴进 AI 对话框。
 
-最终输出：AI风险评分（0-100）+ 分层HTML报告
+**第 2 步**：在同一条消息末尾追加你的论文——
+- 支持上传 PDF/Word 的平台：直接上传附件
+- 不支持的平台：粘贴论文全文文本
+
+**第 3 步**：在最后加上这句话：
+
+```
+请严格按照上述《BZD 数模论文 AI 痕迹审计 v2.2》执行审计，
+输出一个完整的、可直接保存为 .html 的单文件报告。
+不要输出报告以外的解释性文字。
+```
+
+AI 会返回一段 HTML 代码。复制它 → 新建记事本 → 粘贴 → 另存为
+`审计报告.html`（编码选 UTF-8）→ 双击用浏览器打开。
+
+**可选增强输入**（能显著提高判定置信度，有就一起给）：
+赛题原文与附件 · 代码文件 · 中间结果 · 参考文献清单
 
 ---
 
-## 📊 第一层：五维框架评分标准
+## 🎯 这个工具判什么、不判什么
 
-### 1. 语言模板化（权重60%）
+| ✅ 判 | ❌ 不判 |
+|---|---|
+| AI **拼装**痕迹 | 是否**使用过** AI |
+| 结论能否被追溯和复算 | 作者身份概率 |
+| 模型选择是否华而不实 | 模型是否有学术创新 |
+| 引文与数值是否真实 | 替代查重 / 官方 AIGC 检测 |
 
-#### 检查项1：高频连接词密度
-**高频连接词清单：**
-- 超高频（5星）：综上所述、综合上述、进一步、此外、与此同时、值得注意的是、可以看出、由此可见
-- 高频（4星）：一般来说、不仅如此、所以说、因此可见、不得不说、需要指出的是、不容否认
-- 中频（3星）：当然、显然、毋庸置疑、不言而喻、众所周知、相比之下、而言之
+**核心分界线**：一篇声明用了 AI 辅助、但建模主线由人主导、参数可溯源、
+结果可复算的论文，判为低风险；一篇没用 AI 但引文造假、参数对不上的论文，
+直接触发一票否决。
 
-**评分标准：**
+**数模竞赛的本质原则**：能用基础模型解决的，就不该上复杂模型。
+判断模型是否华而不实，是第二层的核心结论。
+
+---
+
+## 🧮 评分总架构
+
 ```
-密度 < 15%  → 90-100分（正常）
-密度 15-20% → 70-89分（注意）
-密度 20-25% → 50-69分（需改）
-密度 > 25%  → 0-49分（高风险）
-```
+                 ┌─ 语言层面 60%（6个维度）
+第一层（9维）────┤
+                 └─ 事实层面 40%（3个维度）
 
-#### 检查项2：排比与同构句式
-**特征识别：**
-- 三项以上排比：具有XX、YY、ZZ等特点
-- 同构句式重复：采用方法A进行XX，采用方法B进行YY，采用方法C进行ZZ
+第二层（5项等权）── 建模逻辑深度审查
 
-**风险判定：**
-- 排比后无数据支撑 → 风险
-- 连续4个同构句式 → 风险
-
-#### 检查项3：被动句占比
-**评分标准：**
-```
-10-20% → 低风险
-20-30% → 中风险
-> 30%  → 高风险
+最终风险分 = (第一层风险分 + 第二层风险分) / 2
 ```
 
-#### 检查项4：拔高词检查
-**拔高词清单：** 具有XX性、显著提高、大幅、奠定基础、彰显价值、完美实现、取得成果、有效解决
+### ⚠️ 分数方向约定（最容易出错，务必先读）
 
-**风险标准：** 拔高词后无量化数据 → 风险
+本框架有**两套方向相反**的分数，严禁混用：
 
-#### 检查项5-8：其他四维（合计40%）
-- **结构与论证（12%）：** 逻辑链条完整、假设合理、问题分析清晰
-- **建模专属性（15%）：** 是否说明本题特征、为什么选这个模型
-- **求解与验证（10%）：** 结果验证充分、灵敏度分析、数据合理
-- **来源与一致性（3%）：** 参考文献数量（推荐10+篇）、参数溯源清晰
-
-**第一层总分计算：**
 ```
-第一层分数 = 语言模板化得分×60% + 其他四维平均得分×40%
+质量分：各维度直接打出的分，越高越好
+        100 = 完全无 AI 特征     0 = 严重 AI 特征
+
+风险分：用于查等级表，越高越危险
+        风险分 = 100 − 质量分
+        0 = 无风险              100 = 极高风险
+```
+
+**三步计算，不可跳步**：
+
+```
+第1步  给每个维度打质量分（0-100）
+第2步  加权求和 → 该层质量分
+第3步  100 − 质量分 = 该层风险分 → 再查等级表
+```
+
+**风险等级表（对风险分）**：
+
+| 风险分 | 等级 | 含义 | 处理 |
+|---|---|---|---|
+| 0–15 | 🟢 低风险 | 语言规范、事实可核验 | 可直接接收 |
+| 16–30 | 🟡 中低风险 | 有局部套话或个别存疑项 | 可接收，需补充改进 |
+| 31–50 | 🟠 中风险 | 多维度问题 | 需深度检查后再定 |
+| 51–70 | 🔴 中高风险 | 明显 AI 特征 | 强烈建议强制改稿 |
+| 71–100 | ⛔ 高风险 | 确认 AI 拼装迹象 | 建议拒稿 |
+
+---
+
+# 第一层：九维检测
+
+## 【语言层面 · 权重 60%】
+
+### 维度 1 · 高频连接词（权重 20%）
+
+**基础词库**（Humanizer-zh，★表示 AI 高频程度）：
+
+```
+★★★★★  综上所述 / 综合上述
+★★★★    进一步 / 可以看出
+★★★      此外 / 与此同时 / 值得注意的是 / 一般来说 / 由此可见
+★★        当然 / 不仅…而且
+```
+
+**数模特化增补词**：
+
+```
+"具有…特性"   → 听起来科学，后面通常没有数据
+"相对而言"     → 模糊对比，无具体数字
+"显然"         → 跳过推导的信号
+"毋庸置疑"     → 强行下结论
+"众所周知"     → 学术写作应避免
+```
+
+**计算**：`密度 = 高频词总出现次数 ÷ 全文总句数`
+
+**判分**：
+
+| 密度 | 得分 | 标记 |
+|---|---:|---|
+| < 8% | 100 | 🟢 |
+| 8–12% | 85 | 🟢 |
+| 12–16% | 60 | 🟡 |
+| 16–20% | 35 | 🟠 **标红** |
+| 20–25% | 15 | 🔴 **标红** |
+| > 25% | 0 | ⛔ **标红** |
+
+**附加扣分**：同一高频词在 3 页内出现 > 2 次，每处额外 −5 分（下限 0）
+
+**豁免**：优化模型末尾的"综上，式(1)–(3) 构成完整模型"是数模写作的
+**规范要求**，不计为套话。
+
+---
+
+### 维度 2 · 排比与同构句式（权重 12%）
+
+**三级分类**：
+
+```
+🔴 L1 高风险
+"该方法具有以下优点：(1)准确度高、(2)效率快、(3)鲁棒性强"
+   → 排比后全是抽象形容词，一个数据都没有
+
+🟡 L2 中等
+"约束条件：(1)螺距 p≥0.30m、(2)转向半径 R<4.5m、(3)速度 v≤2m/s"
+   → 有数字，但没说这些值从哪来
+
+🟢 L3 安全
+"约束：(1)p≥0.30m(赛题给出)、(2)R<4.5m(由题意推导)、(3)v≤2m/s(安全系数)"
+   → 每项都有数据 + 来源
+```
+
+**判分**：
+
+| 情况 | 得分 | 标记 |
+|---|---:|---|
+| 全部 L3 | 100 | 🟢 |
+| L3 为主，个别 L2 | 80 | 🟢 |
+| L2 为主 | 55 | 🟡 |
+| 存在 1 处 L1 | 30 | 🟠 **标红** |
+| 存在 ≥2 处 L1 | 0 | 🔴 **标红** |
+
+**⭐ 附加扣分（v2.2 新增，容易被漏掉的模板化信号）**：
+
+同一组织词（"其一/其二/其三"、"首先/其次/最后"、"一方面/另一方面"）
+在 **≥4 个不同章节**机械复用 → 额外 **−20**
+在 **≥6 个不同章节**机械复用 → 额外 **−30**
+
+> 此项**即使各项内部都有数据也照扣**。理由：跨章节复用同一组织词
+> 本身就是可观察的模板化痕迹，与项内是否有数据是两件事。
+> v2.1 只按 L1/L2/L3 分级，会完全漏掉这类问题。
+
+---
+
+### 维度 3 · 拔高词五级分类（权重 12%）
+
+```
+L1 【最高风险】绝对化 + 零数据
+   ❌ "模型精度最高"  "算法最优"  "效果最好"
+   ✅ 改为："与基准相比，RMSE 从 0.34 降至 0.12，精度提升 64.7%"
+
+L2 【高风险】相对化 + 泛泛对比
+   ❌ "相比传统方法，性能有很大提升"
+   ✅ 改为："相比蛮力搜索 O(n²)，二分搜索 O(log n) 在 224 个对象上快约 100 倍"
+
+L3 【中风险】定量 + 无基准
+   ❌ "精度为 99%"
+   ✅ 改为："在 500 样本测试集上精度 99.2%（基准 89.5%）"
+
+L4 【中低风险】定量 + 有数字无对比
+   ❌ "计算时间 0.5 秒"
+   ✅ 改为："0.5 秒 vs 竞品 2.3 秒，快 3.6 倍"
+
+L5 【低风险】完整定量 + 充分对比
+   ✅ "与 KNN(k=3) 相比，F1 在 3 个数据集上提升 12.5%–18.7%，D1 上最高 20.1%"
+```
+
+**判分（v2.2 大幅收严）**：
+
+| 情况 | 得分 | 标记 |
+|---|---:|---|
+| L5 为主且拔高词密度 < 8% | 100 | 🟢 |
+| L4–L5 为主 | 80 | 🟢 |
+| L3 为主 | 55 | 🟡 |
+| **存在 1 个 L1** 或 2 个 L2 | 30 | 🟠 **标红** |
+| 存在 ≥2 个 L1 | 0 | 🔴 **标红** |
+
+> v2.1 要 >3 个 L1 才归零，v2.2 改为 **1 个 L1 即标红**。
+
+---
+
+### 维度 4 · 被动句占比（权重 9%）
+
+```
+❌ 高风险："该模型被应用于… 结果被验证… 参数被优化… 方案被采用…"
+   → 整段被动，生硬
+
+✅ 正常："我们建立了该模型… 结果验证了… 通过灵敏度分析，我们发现…"
+   → 主被动混合，自然
+```
+
+**方法**：抽取 5 个代表段落（摘要 / 建模 / 求解 / 结果 / 结论各一），统计占比。
+
+**判分**：
+
+| 占比 | 得分 | 标记 |
+|---|---:|---|
+| < 15% | 100 | 🟢 |
+| 15–22% | 85 | 🟢 |
+| 22–27% | 55 | 🟡 |
+| 27–33% | 30 | 🟠 **标红** |
+| > 33% | 0 | 🔴 **标红** |
+
+**附加扣分**：出现连续 ≥4 句被动语态的段落，每处 −10 分
+
+---
+
+### 维度 5 · 段落结构规律性（权重 6%）
+
+**方法**：抽取 20 段，统计**段落开头方式**的重复率。
+
+| 重复率 | 得分 | 标记 |
+|---|---:|---|
+| < 15% | 100 | 🟢 |
+| 15–28% | 80 | 🟢 |
+| 28–40% | 50 | 🟡 |
+| 40–55% | 25 | 🟠 **标红** |
+| > 55% | 0 | 🔴 **标红** |
+
+**⚠️ 重要豁免**：数模论文各建模章节遵循"建模思路 → 模型建立 → 模型求解
+→ 结果分析 → 检验与灵敏度"五段式，属**文体常规**，竞赛评审明确期待
+这一结构，**不计入本项**。本项只统计**段落级**的开头方式重复。
+
+---
+
+### 维度 6 · 文本复杂度（权重 1%）
+
+**A. 词汇多样性 TTR** = 不同词数 ÷ 总词数
+
+**B. 3-gram 重复率**：
+```
+"本文采用… 本文选择… 本文利用… 本文验证…"  → "本文+动词" > 3 次即警戒
+"通过…方法… 通过…算法… 通过…分析…"        → "通过+名词" > 4 次即警戒
+```
+
+**判分**：
+
+| 情况 | 得分 | 标记 |
+|---|---:|---|
+| TTR > 0.55 且 3-gram < 4% | 100 | 🟢 |
+| TTR 0.45–0.55 或 3-gram 4–8% | 65 | 🟡 |
+| TTR 0.35–0.45 或 3-gram 8–13% | 30 | 🟠 **标红** |
+| TTR < 0.35 或 3-gram > 13% | 0 | 🔴 **标红** |
+
+---
+
+## 【事实层面 · 权重 40%】
+
+> ⚠️ 本层任一维度触发**一票否决项**时，直接判定论文风险等级，
+> 不再按加权分核算。详见后文《一票否决清单》。
+
+### 维度 7 · 引文验证（权重 15%）
+
+**L1 快速检查（30 秒）**
+```
+✓ DOI 格式正确？（10.XXXXX/…）
+✓ 作者名规范？（Lastname, F. I. 或 中文姓名, 等）
+✓ 期刊名拼写与大小写正确？
+✓ 发表年份合理？（非经典文献一般不超过 20 年）
+```
+
+**L2 存在性验证（2–3 分钟）**
+```
+途径：Google Scholar / 知网 / PubMed / 期刊官网 / OpenAlex
+核对：文献是否存在？作者、题名、年份、卷期页码是否全部匹配？
+
+🚨 无法找到 → 虚构可能性极高，直接触发一票否决
+```
+
+**L3 主张-支撑匹配（5 分钟，抽查不少于 5 篇关键文献）**
+```
+1. "根据文献[X] 的方法，本文采用…"
+   → 查该文献是否真的提出了这个方法
+2. "数据集包含 XXX 个样本"
+   → 验证数据集是否存在、规模是否一致
+3. "在文献[X] 的基础上改进"
+   → 改进点是否说清楚了
+```
+
+**数模特化检查点**：
+```
+• "根据题意" → 是否真有赛题原文支撑？
+• 引用的算法论文，其应用场景与本题是否可比？
+  （如：某算法原用于图像识别，本题用于路径优化，
+    需说明"为什么该算法在本题也适用"）
+• 若文献全是综述和教科书、没有一篇具体算法论文
+  → 说明作者对方法理论理解不深，−15 分
+```
+
+**判分**：
+
+| 情况 | 得分 | 标记 |
+|---|---:|---|
+| 全部通过 L1–L3，无未引用的凑数文献 | 100 | 🟢 |
+| 全部存在，但有 1–2 篇列入文献表却未在正文引用 | 80 | 🟡 |
+| 有 1 篇作者/年份/期刊信息不符 | 25 | 🔴 **标红 + 否决** |
+| 有任 1 篇**确认不存在** | 0 | ⛔ **强制高风险** |
+
+**附加检查**：文献总数 < 6 篇 或 > 25 篇 → −10 分
+
+---
+
+### 维度 8 · 数值一致性追踪（权重 15%）
+
+**做法**：建一张参数溯源表，逐一追踪并**复算算术关系**。
+
+| 参数 | 数值 | 来源层级 | 出现位置 | 一致？ |
+|---|---|---|---|---|
+| 例：p | 0.55 m | L1 赛题给出 | 摘要/P3/表1/公式(2) | ✓ |
+| 例：t* | 412.474 s | L2 问二推导 | P8/P11/表3 | ✓ |
+| 例：Δt | 0.5 s | L3 物理约束 | P6/代码/表2 | ✓ |
+
+**来源三级体系**：
+```
+L1【赛题给出】  "螺距 p=0.55m（题目给出）"                    风险低
+L2【前问推导】  "Q2 推导出 t*=412.474s，Q3 以此为初值"        风险低
+L3【物理约束】  "Δt=0.5s 由速度 v=1m/s 与精度要求 <10⁻⁴s 推导" 风险中
+🔴 无来源      "设步长 Δt=0.5s"（无任何解释）                 风险极高
+```
+
+**必做的算术复算**（AI 编造的数字往往过不了这关）：
+```
+• 各分项之和 = 总计？
+• 占比 = 分子 ÷ 分母？
+• 差值 = 两数相减？
+• 极差 = 最大 − 最小？
+```
+
+**判分**：
+
+| 情况 | 得分 | 标记 |
+|---|---:|---|
+| 全部一致 + 算术自洽 + 来源清晰 | 100 | 🟢 |
+| 一致但个别参数来源未说明 | 75 | 🟡 |
+| 存在 1–5% 偏差且**未加解释** | 35 | 🟠 **标红** |
+| 存在 >5% 偏差且**未加解释** | 0 | 🔴 **标红 + 否决** |
+
+**幽灵参数**：任一关键参数无法追溯到 L1/L2/L3 任一层级 → 每个 −15 分
+
+**⭐ 加分项（v2.2 新增，上限 +5）**：
+
+论文**主动披露**数值差异并解释其来源的，**不触发否决，反而加分**。例如：
+
+> "问题四独立重解确定性基准时目标值为 1,106.9，与问题三的 1,105.7
+> 相差 0.1%，来自分支定界在间隙容差内的数值差异。"
+
+> "灵敏度脚本为独立简化实现，其基值与主算存在微小数值差异
+> （常数项初始化方式不同），但结论方向完全一致。"
+
+> **为什么这是加分项**：AI 生成的文本会让数字直接对齐，不会制造这种
+> "无必要的麻烦"。能写出这种披露，说明作者真实运行过两套独立实现、
+> 观察到差异、并判断了它的性质。这是人工复算最有力的证据。
+
+---
+
+### 维度 9 · 术语一致性（权重 10%）
+
+**做法**：提取 5–7 个核心概念，追踪全文表述方式。
+
+| 核心术语 | 摘要 | 第5章 | 第9章 | 一致性 |
+|---|---|---|---|---|
+| 例：算法名 | GA | GA | GA | 🟢 一致 |
+| 例：运次数 | 运次 | 班次 | 运次 | 🟡 混用 |
+
+**典型 AI 特征**：
+```
+❌ P1: "采用遗传算法 GA"
+   P5: "利用进化策略 ES"
+   P10: "该种群智能算法…"
+   → 到底用的是哪个？概念混乱，说明缺乏统一理解
+
+✅ 全文统一叫"约束优化框架"，各问是它的不同变体
+```
+
+**判分**：
+
+| 情况 | 得分 | 标记 |
+|---|---:|---|
+| 完全一致 | 100 | 🟢 |
+| 仅存在领域公认同义词（如"粗差/过失误差"） | 85 | 🟢 |
+| 1 个核心术语有 2 种表述 | 55 | 🟡 |
+| 1 个核心术语有 ≥3 种表述 | 25 | 🟠 **标红** |
+| 多个核心术语混乱（尤其算法名称） | 0 | 🔴 **标红** |
+
+---
+
+## 第一层汇总公式
+
+```
+第一层质量分 =
+    维1×0.20 + 维2×0.12 + 维3×0.12 + 维4×0.09 + 维5×0.06 + 维6×0.01
+  + 维7×0.15 + 维8×0.15 + 维9×0.10
+
+第一层风险分 = 100 − 第一层质量分
+```
+
+**⚠️ 上面的百分数已经是占总分 100% 的最终权重，直接用即可。
+不要再乘 0.60！** 那会让语言层塌缩到 36%、事实层被隐性放大到 53%。
+
+**校验示例**（照着算一遍，确认方向没搞反）：
+```
+设：维1=100 维2=50 维3=80 维4=100 维5=80 维6=100 维7=80 维8=100 维9=85
+
+质量分 = 100×.20 + 50×.12 + 80×.12 + 100×.09 + 80×.06 + 100×.01
+       + 80×.15 + 100×.15 + 85×.10
+       = 20.0 + 6.0 + 9.6 + 9.0 + 4.8 + 1.0 + 12.0 + 15.0 + 8.5
+       = 85.9
+
+风险分 = 100 − 85.9 = 14.1  →  🟢 低风险  ✓ 方向自洽
 ```
 
 ---
 
-## 🔍 第二层：建模逻辑深度审查
+# 🚨 一票否决清单
 
-### 2.1 模型常用性判断
+以下任一情形成立，**直接判定为对应等级，不再按加权分核算**。
+理由：这些是**造假**而非文风问题，不应被其他维度的高分稀释。
 
-**竞赛常见模型（绿色清单）：**
-- 基础类：线性回归、非线性回归、ARIMA、K-means、分类算法、傅里叶
-- 几何类：SAT、二分搜索、扫描线、蒙特卡洛、微分方程、差分方程
-- 优化类：线性规划、整数规划、动态规划、贪心算法
-- 评价类：AHP、TOPSIS、熵权法、模糊综合评价
-- 自定义类：基于几何约束的特殊曲线、基于物理过程的动力学方程
-
-**AI高频但不适合数模的模型（红色清单）：**
-- 深度学习：DNN、CNN、RNN、LSTM → 🔴高风险
-- 强化学习 → 🔴高风险
-- 遗传算法、蚁群算法、粒子群优化 → 🔴高风险
-- 支持向量机、随机森林、XGBoost → 🟠中风险
-
-**评分标准：**
-```
-全为常见模型 → 90-100分
-含有1-2个高频模型 → 50-70分
-含有3+个高频模型 → 0-50分
-```
-
-### 2.2 复杂度vs收益评估
-
-**评分标准：**
-- 复杂度与问题规模匹配 → 80-100分
-- 有一定过度工程化 → 50-79分
-- 严重过度工程化 → 0-49分
-
-**判定方法：** 用O(n)符号或说明，检查是否与问题数据量匹配
-
-### 2.3 华而不实识别（五大特征）
-
-**特征1：模型名复杂，实现细节不清**
-- 出现"改进的""融合的""混合的" → 检查后续是否说明改进点
-- 无改进说明 → 风险
-
-**特征2：效果声称无对比基线**
-- 出现"精度高""效率高""鲁棒性强" → 检查是否有具体数值
-- 无量化数据 → 风险
-
-**特征3：超参数调优过度**
-- 出现"网格搜索""贝叶斯优化""参数调整" → 检查是否说明必要性
-- 无必要性说明 → 风险
-
-**特征4：模型通用化无边界**
-- 出现"广泛应用于""适用范围广" → 检查是否明确限定条件
-- 无条件限定 → 风险
-
-**特征5：问题与模型个数不匹配**
-- 5个问题却有7-8个不同模型 → 检查是否存在复用
-- 复用少 → 风险
-
-**评分标准：**
-```
-无高风险特征 → 90-100分
-有1-2个特征 → 60-89分
-有3-5个特征 → 0-59分
-```
-
-### 2.4 模型选择"三问法"
-
-对每个模型提出三个问题：
-
-**问1：问题明确吗？**
-- 良好示例："问题要求在约束条件下计算位置"
-- 风险示例："采用该模型进行求解"
-
-**问2：本题数据特征是什么？**
-- 良好示例："本题有螺距恒定、数据量2000等特征"
-- 风险示例："该模型可处理各种数据"
-
-**问3：为什么选这个而不选替代方案？**
-- 良好示例："相比线性搜索O(n)，二分搜索O(log n)更高效"
-- 风险示例："缺少此说明"
-
-**评分标准：**
-```
-5个问题都能清晰回答三问 → 90-100分
-3-4个问题完全通过 → 60-89分
-<3个问题通过 → 0-59分
-```
-
-### 2.5 建模路径风格对照
-
-逐项对照论文表现，并给出页码或章节证据：
-
-| 对比方面 | 人主导的常见建模表现 | AI容易推荐的复杂化倾向 |
+| 触发条件 | 强制等级 | 理由 |
 |---|---|---|
-| 建模路径 | 从简到繁，先基线后改进 | 追求一步到位，同时引入多种方法 |
-| 出发点 | 抓住主要矛盾并合理简化 | 尽量覆盖更多变量、因素和模型 |
-| 模型选择 | 可解释、可实现、与题目匹配 | 热门算法或多个模型叠加 |
-| 模型假设 | 忽略次要因素并说明边界 | 为追求“真实”引入大量参数与约束 |
-| 数据适配 | 根据规模、质量和特征调整模型 | 忽略样本量、缺失值及参数可辨识性 |
-| 求解过程 | 围绕核心问题形成连贯主线 | 形成“模型菜单”或方法拼盘 |
-| 结果解释 | 说明每一步目的、依据及作用 | 给出步骤但无法解释必要性 |
-| 论文表达 | 结构清晰，便于作图、复现和验证 | 篇幅长、术语多，掩盖核心贡献 |
-| 稳健性 | 易检查错误并分析敏感性 | 多环节误差累积与传播 |
-| 评审效果 | 体现完整逻辑和真实理解 | 缺乏解释时像算法堆砌 |
+| 参考文献经 L2 验证**确认不存在** | ⛔ 高风险 | 学术造假 |
+| 引文**作者/年份/期刊与真实文献不符** | 🔴 中高风险 | 幻觉特征或治学不端 |
+| 同一参数在不同位置**矛盾且无解释**（>5%） | 🔴 中高风险 | 数据虚构或计算错误 |
+| 声称的**数据集/规模与实际不符** | ⛔ 高风险 | 结果不可信 |
+| 结果数值**无法由所述方法复现**（量级错误） | 🔴 中高风险 | 结果可能为编造 |
 
-每项标记H（人主导）、M（混合/证据不足）或A（复杂化倾向），并附证据。该项风险分为A项比例×100。复杂模型若具有明确题目驱动、基线对比、消融分析、参数来源和量化收益，不得据此判为AI。
+**豁免**：论文**主动披露**数值差异并解释来源的（求解器容差、独立实现
+初始化差异等），**不触发否决**——主动披露是人工复算的正面证据。
 
-**第二层总分计算：**
+---
+
+# 第二层：建模逻辑深度审查
+
+> **核心命题**：数学建模竞赛的本质是，**能用基础模型解决的，
+> 就不该上复杂模型**。判定模型是否华而不实，是本层的核心结论。
+
+五项**等权**，各 20 分，合计 100 分质量分。
+
+## 2.1 模型常用性判断
+
+**🟢 数模常用模型库（安全）**
+
 ```
-第二层分数 = (模型常用性 + 复杂度评估 + 华而不实 + 三问法 + 建模路径风格) ÷ 5
+统计类     线性/非线性回归 · 逻辑回归 · 主成分分析 · 时间序列(ARIMA/指数平滑)
+聚类       K-means · 层次聚类 · 谱聚类
+优化       线性规划 · 整数规划 · 混合整数规划 · 动态规划 · 贪心
+几何/搜索  SAT 碰撞检测 · 二分搜索 · 扫描线 · 蒙特卡洛
+系统       微分方程 · 差分方程
+评价决策   AHP · 熵权法 · TOPSIS · 模糊综合评价
+数据处理   加权最小二乘 · 数据协调 · 卡尔曼滤波
+鲁棒       区间鲁棒 · Bertsimas 预算不确定集 · 情景分析
+自定义     基于物理/几何约束推导的专门模型（需有明确问题驱动）
+```
+
+**🔴 AI 高频但数模不适用（命中即高风险）**
+
+| 模型 | 为什么 AI 爱推 | 为什么数模不该用 |
+|---|---|---|
+| 深度学习 DNN/CNN/RNN/LSTM | 看起来高级 | 数据少、不可解释、易过拟合 |
+| 强化学习 | 听起来智能 | 本题通常不是策略学习问题 |
+| 遗传算法 / 粒子群 / 蚁群 | 名字新颖 | 比二分搜索复杂 10 倍，还不保证最优 |
+| 支持向量机 SVM | 被夸大 | 高维才有优势，本题数据量小 |
+| 随机森林 / XGBoost | 集成学习光环 | 样本不足，容易过拟合 |
+| 贝叶斯网络 | 听起来高深 | 因果链通常不明确 |
+
+**判分**：全部为常用模型 → 20 分；命中 1 个 AI 高频模型且无充分理由
+→ 10 分 🟠；命中 ≥2 个 → 0 分 🔴 **标红**
+
+---
+
+## 2.2 复杂度 vs 收益评估
+
+对每个模型问三个问题：
+
+| 问题 | ✅ 好回答 | ❌ 坏回答 |
+|---|---|---|
+| 复杂度是多少？ | "时间 O(log n)，代码 10 行，流程 3 步" | "该算法高效" |
+| 能否更简单？为何没用？ | "线性搜索需 50 次迭代；二分只需 4 次" | "该算法是最优选择" |
+| 复杂度提升的收益？ | "精度提升 10%，计算量翻倍，综合为正" | "模型准确度更高" |
+
+**判分**：全部模型复杂度与问题规模匹配 → 20 分；1 处过度工程化
+→ 12 分 🟡；≥2 处 → 5 分 🟠 **标红**
+
+**加分观察**：识别出模型为线性后改用解析直解、放弃通用优化器，
+是**简化**而非复杂化——与 AI"上更重工具"的倾向相反，应视为人工主导证据。
+
+---
+
+## 2.3 华而不实五特征
+
+| # | 特征 | ❌ 症状 | ✅ 正常 |
+|---|---|---|---|
+| 1 | 模型名复杂但实现不透明 | "采用改进的遗传算法"（改进了什么？答不出） | "标准 GA，Pc=0.8, Pm=0.01，来自文献[X]" |
+| 2 | 效果声称无对比基线 | "该模型准确性高、鲁棒性强" | "相比蛮力搜索速度提升 15 倍（表8）" |
+| 3 | 超参数调优过度 | "网格搜索调优 5 个超参数"（为什么调？） | "参数取文献推荐值，12 组扰动证明不敏感" |
+| 4 | 通用化无边界 | "可广泛应用于各种工程优化问题" | "在螺距 [0.30,0.56]m 内有效，超出需分段" |
+| 5 | 模型数与问题数不匹配 | 5 问建了 7–8 个模型，几乎无复用 | 1 个核心框架 + 5 个变体 |
+
+**判分**：0–1 项 → 20 分；2 项 → 12 分 🟡；3 项 → 6 分 🟠 **标红**；
+≥4 项 → 0 分 🔴 **标红**
+
+---
+
+## 2.4 模型选择"三问法"
+
+对**每个**模型逐一回答：
+
+```
+【问1】本问的问题性质是什么？（目标 + 约束是否明确）
+  ✅ "问题1要求在螺距 p=0.55m 约束下计算 224 把手的位置"
+  ❌ "问题1需要建立位置模型"
+
+【问2】本问有什么特殊的数据或结构特征？（为什么这个模型适合）
+  ✅ "本问碰撞对象都是凸多边形且 ≤3 个，SAT 复杂度仅 O(n)"
+  ❌ "选 SAT 因为它精度高、速度快"（通用套话，没指本题）
+
+【问3】为什么不用替代方案？
+  ✅ "线性搜索 O(n) 需 50 次；三叉搜索仅快 10% 但代码复杂度翻倍；
+      启发式不保证最优。故选二分搜索。"
+  ❌ "采用改进的粒子群优化"（不说为什么不用二分搜索）
+```
+
+**⭐ 标准答案形态**：先指出本题的结构特征 → 说明常规做法为何失效
+→ 给出替代方案及其数学依据。例如：
+
+> "网络含环（如 A1–A2–A4–A3 回路），不存在天然的追溯顺序，
+> 故将节点碳强度方程改写为不动点迭代形式求解。"
+
+**判分**：全部模型三问皆可答 → 20 分；1 个模型缺 1 问 → 14 分 🟡；
+多个模型缺问 → 7 分 🟠 **标红**；普遍答不出 → 0 分 🔴 **标红**
+
+---
+
+## 2.5 建模路径风格十项对照
+
+| 对比方面 | H：人主导的渐进建模 | A：AI 式复杂化倾向 |
+|---|---|---|
+| 建模路径 | 先建基线，再依暴露的问题改进 | 追求一步到位，同时上多种方法 |
+| 出发点 | 抓主要矛盾，有依据地简化 | 尽量覆盖更多变量，未说明必要性 |
+| 模型选择 | 可解释、可实现、与题匹配 | 倾向热门算法，叠加多个模型名 |
+| 模型假设 | 主动忽略次要因素并说明边界 | 为"更真实"引入大量来源不清的参数 |
+| 数据适配 | 按样本量、缺失、噪声调整 | 忽略样本量与参数可辨识性 |
+| 求解过程 | 主线连贯，步骤输入输出明确 | "模型菜单"或方法拼盘，接口不清 |
+| 结果解释 | 说得清每步的目的与现实含义 | 能列步骤，说不清必要性 |
+| 论文表达 | 结构清晰，便于复现验证 | 篇幅长术语多，掩盖核心贡献 |
+| 稳健性 | 结构简洁，易定位错误做敏感性 | 环节多，误差累积却未分析 |
+| 评审效果 | 体现完整逻辑与清晰取舍 | 易被评为算法堆砌 |
+
+**执行**：逐项标 `H`（有证据）/ `M`（混合或证据不足）/ `A`（有证据）。
+**每项必须附页码、章节或具体模型证据，不得凭模型名称直接标记。**
+
+| A 项数量 | 得分 | 判断 |
+|---:|---:|---|
+| 0–2 | 20 | 🟢 人主导的渐进建模 |
+| 3–4 | 13 | 🟡 局部复杂化 |
+| 5–6 | 6 | 🟠 **标红** 主线被方法拼盘削弱 |
+| 7–10 | 0 | 🔴 **标红** 系统性复杂化 |
+
+> **复杂 ≠ AI**。若复杂模型由题目规模、非线性、动态性或精度要求驱动，
+> 并具备基线对比、参数来源和量化收益，应降低该项风险。
+
+---
+
+## 第二层汇总
+
+```
+第二层质量分 = 2.1 + 2.2 + 2.3 + 2.4 + 2.5   （各 20 分，合计 100）
+第二层风险分 = 100 − 第二层质量分
 ```
 
 ---
 
-## 📈 最终评分计算
+# 📐 最终评分
 
 ```
-最终AI风险分 = (第一层得分 + 第二层得分) ÷ 2
-
-风险等级划分：
-0-20    🟢 低风险      → 可直接接收
-21-35   🟡 中低风险    → 可接收，建议改进
-36-54   🟠 中风险      → 需深度检查
-55-74   🔴 中高风险    → 强烈建议拒稿或改稿
-75-100  ⛔ 高风险      → 建议拒稿
+最终 AI 风险分 = (第一层风险分 + 第二层风险分) / 2
 ```
+
+**置信度声明**（必须在报告中写明）：
+
+| 输入材料 | 置信度 | 误差 |
+|---|---|---|
+| 仅论文 | 中 | ±8–12 分 |
+| 论文 + 赛题 | 中 | ±6–10 分 |
+| 论文 + 赛题 + 代码/结果 | 中高 | ±5–8 分 |
+| 再加版本历史或对话记录 | 高 | ±3–5 分（仍非身份鉴定） |
 
 ---
 
-## 📝 参数溯源检查清单
+# 🎨 报告标红规范（强制）
 
-所有参数应能追溯来源：
-- **L1：赛题直接给出** ✓ 最佳
-- **L2：前问推导结果** ✓ 良好
-- **L3：物理约束推导** ✓ 可接受
-- **L4：来源不明** ❌ 高风险
+报告必须让问题**一眼可见**，不得把风险项混在通过项里平铺呈现。
 
----
+| 状态 | 色值 | 触发 | 呈现要求 |
+|---|---|---|---|
+| 🔴 严重 | `#c0392b` | 维度 < 30 或触发否决 | 红底红框卡片 + 置于报告最前 + 列证据位置 |
+| 🟠 警示 | `#e67e22` | 维度 30–54 | 橙色左边框 + 写明改进动作 |
+| 🟡 注意 | `#f39c12` | 维度 55–79 | 黄色标记 + 一句话说明 |
+| 🟢 通过 | `#27ae60` | 维度 ≥ 80 | 常规呈现，不占视觉重心 |
 
-## 📋 问间对接检查
+**五条硬性要求**：
 
-检查Q1→Q2→Q3→Q4→Q5的数据流是否明确：
-- 明确说明"Q_i的结果X用于Q_{i+1}的约束Y" → 低风险
-- 含糊其辞或无说明 → 高风险
-
----
-
-## 🔧 具体执行步骤
-
-### 第1步：基本信息采集
-```
-论文标题：[X]
-参赛队名：[X]
-问题数：5题（Q1-Q5）
-总页数：[X]页
-参考文献数：[X]篇
-```
-
-### 第2步：逐部分扫描
-- **摘要部分**：检查第一层5项 + 其他四维
-- **问题分析部分**：同上
-- **Q1-Q5部分**：分别检查第一层 + 第二层（2.1-2.5）
-- **求解验证部分**：检查参数溯源表、问间对接
-
-### 第3步：评分汇总
-```
-第一层：
-- 语言模板化：[X]/100
-- 结构与论证：[X]/100
-- 建模专属性：[X]/100
-- 求解与验证：[X]/100
-- 来源与一致性：[X]/100
-→ 第一层总分 = 语言×60% + 其他×40% = [X]/100
-
-第二层：
-- 2.1 模型常用性：[X]/100
-- 2.2 复杂度评估：[X]/100
-- 2.3 华而不实：[X]/100
-- 2.4 三问法：[X]/100
-- 2.5 建模路径风格：[X]/100
-→ 第二层总分 = ([X]+[X]+[X]+[X]+[X])÷5 = [X]/100
-
-最终分数 = ([第一层]+[第二层])÷2 = [X]/100
-```
+1. 任一维度 `< 55` 时，报告顶部**必须**有红色警示区，汇总全部标红项
+2. 每个标红项必须含三要素：**问题描述 + 证据位置（页/节）+ 具体改法**
+3. **不得**用"建议优化""可以更好"这类模糊措辞描述标红项
+4. 评分表中标红行须用**红色背景**，不能只靠一个小图标区分
+5. 只有全部维度 ≥ 80，才可在结论区使用绿色通过卡片
 
 ---
 
-## 📊 输出HTML模板
+# 🖥 HTML 报告模板
+
+> AI 请以下面这份骨架生成报告，把 `{{...}}` 替换为实际内容。
+> 保持双版本切换（简洁版 / 完整版）与科研蓝白配色。
 
 ```html
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BZD数学建模论文AI痕迹审计报告</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'STIX Two Text', 'Times New Roman', serif;
-            line-height: 1.75;
-            color: #1c2e3e;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
-            padding: 40px;
-        }
-        header {
-            background: linear-gradient(135deg, #1a3a52 0%, #2c5aa0 100%);
-            color: white;
-            padding: 40px;
-            text-align: center;
-            border-bottom: 3px solid #e74c3c;
-            margin-bottom: 30px;
-            border-radius: 8px;
-        }
-        header h1 { font-size: 32px; margin-bottom: 10px; }
-        header p { font-size: 15px; opacity: 0.95; }
-        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-        h2 { color: #1a3a52; border-bottom: 2px solid #2c5aa0; padding-bottom: 10px; margin: 25px 0 15px 0; }
-        h3 { color: #2c5aa0; margin: 15px 0 10px 0; }
-        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-        th { background: linear-gradient(135deg, #1a3a52 0%, #2c5aa0 100%); color: white; padding: 12px; text-align: left; }
-        td { padding: 10px; border-bottom: 1px solid #ecf0f1; }
-        tr:nth-child(even) { background: #f9fafb; }
-        .badge { display: inline-block; padding: 5px 10px; border-radius: 10px; font-weight: bold; font-size: 11px; margin: 0 5px; }
-        .badge-low { background: #d4edda; color: #155724; }
-        .badge-mid { background: #fff3cd; color: #856404; }
-        .badge-high { background: #f8d7da; color: #721c24; }
-        .section { margin: 20px 0; padding: 15px; border-left: 4px solid #2c5aa0; background: #f9fafb; border-radius: 4px; }
-        .problem { margin: 10px 0; padding: 10px; background: #f0f4f8; border-left: 3px solid #e74c3c; }
-        footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #bdc3c7; color: #666; font-size: 12px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{论文标题}} AI痕迹审计报告 | BZD数模社</title>
+<style>
+:root{--primary:#1a3a52;--secondary:#2c5aa0;--sev:#c0392b;
+  --warn:#e67e22;--note:#f39c12;--ok:#27ae60;--text-dark:#1c2e3e;--text-light:#555}
+*{margin:0;padding:0;box-sizing:border-box}
+html{font-size:14px;scroll-behavior:smooth}
+body{font-family:'STIX Two Text','Times New Roman','宋体',serif;line-height:1.75;
+  color:var(--text-dark);background:linear-gradient(135deg,#f5f7fa,#e9ecef);padding-bottom:40px}
+header{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;
+  padding:38px 30px;text-align:center;border-bottom:3px solid var(--sev)}
+header h1{font-size:29px;font-weight:700;margin-bottom:8px}
+header .sub{font-size:15px;opacity:.95;margin-bottom:6px}
+header .meta{font-size:12.5px;opacity:.82}
+.version-tabs{display:flex;justify-content:center;gap:15px;margin-top:24px;flex-wrap:wrap}
+.version-tabs button{background:rgba(255,255,255,.15);color:#fff;
+  border:1.5px solid rgba(255,255,255,.3);padding:11px 22px;cursor:pointer;
+  font-size:14px;font-weight:600;border-radius:6px;font-family:inherit;transition:all .3s}
+.version-tabs button.active{background:#fff;color:var(--primary);font-weight:700}
+.container{max-width:1020px;margin:28px auto;background:#fff;padding:42px;
+  border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.08);border-left:4px solid var(--secondary)}
+section{margin-bottom:36px}
+h2{font-size:21px;color:var(--primary);border-bottom:2.5px solid var(--secondary);
+  padding-bottom:10px;margin:32px 0 18px;font-weight:700}
+h3{font-size:16px;color:var(--secondary);margin:22px 0 12px;font-weight:700}
+h3.flag-sev{color:var(--sev)}
+p{margin-bottom:12px} ul,ol{margin:10px 0 14px 24px} li{margin-bottom:7px}
+
+/* 顶部红色警示区（维度<55时必须出现） */
+.alert-zone{border:2.5px solid var(--sev);background:linear-gradient(135deg,#fdf3f2,#fbe9e7);
+  border-radius:10px;padding:22px 26px;margin:20px 0 28px}
+.alert-zone .hd{font-size:17px;font-weight:700;color:var(--sev);margin-bottom:14px;
+  display:flex;align-items:center;gap:9px}
+.alert-zone .hd .cnt{background:var(--sev);color:#fff;border-radius:12px;padding:1px 11px;font-size:13px}
+.alert-item{background:#fff;border-left:5px solid var(--sev);border-radius:0 6px 6px 0;
+  padding:14px 18px;margin-bottom:12px}
+.alert-item:last-child{margin-bottom:0}
+.alert-item .ti{font-weight:700;color:var(--sev);margin-bottom:7px;font-size:14.5px}
+.alert-item .row{font-size:13.3px;margin-bottom:5px}
+.alert-item .row b{color:var(--primary);display:inline-block;min-width:64px}
+
+/* 结论卡 */
+.verdict{display:flex;align-items:center;gap:30px;flex-wrap:wrap;border-radius:10px;padding:26px 30px;margin:20px 0}
+.verdict.v-ok{background:linear-gradient(135deg,#eafaf1,#d5f4e6);border:2px solid var(--ok)}
+.verdict.v-warn{background:linear-gradient(135deg,#fef7f0,#fce4d0);border:2px solid var(--warn)}
+.verdict.v-sev{background:linear-gradient(135deg,#fdf3f2,#f9d5d0);border:2px solid var(--sev)}
+.verdict .score{font-size:60px;font-weight:700;line-height:1}
+.verdict.v-ok .score{color:var(--ok)}
+.verdict.v-warn .score{color:var(--warn)}
+.verdict.v-sev .score{color:var(--sev)}
+.verdict .score small{font-size:20px;color:var(--text-light);font-weight:400}
+.verdict .desc{flex:1;min-width:260px}
+.verdict .desc .lv{font-size:21px;font-weight:700;margin-bottom:6px}
+.verdict .desc .note{font-size:13.5px;color:var(--text-light)}
+
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13.4px}
+th{background:var(--primary);color:#fff;padding:11px 12px;text-align:left;font-weight:600}
+td{padding:9px 12px;border-bottom:1px solid #e3e8ec;vertical-align:top}
+tr:nth-child(even) td{background:#f8fafb}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+td.ctr,th.ctr{text-align:center}
+/* 标红行：必须用背景色，不能只靠图标 */
+tr.r-sev td{background:#fdecea !important}
+tr.r-sev td:first-child{border-left:4px solid var(--sev);font-weight:700}
+tr.r-warn td{background:#fef5eb !important}
+tr.r-warn td:first-child{border-left:4px solid var(--warn);font-weight:700}
+tr.r-note td{background:#fffbf0 !important}
+tr.r-note td:first-child{border-left:4px solid var(--note)}
+
+.badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:11.5px;font-weight:700}
+.b-ok{background:#d5f4e6;color:#186a3b} .b-note{background:#fdebd0;color:#9c640c}
+.b-warn{background:#fae5d3;color:#a04000} .b-sev{background:#fadbd8;color:#943126}
+
+.box{border-left:4px solid var(--secondary);background:#f4f8fb;padding:16px 20px;
+  border-radius:0 6px 6px 0;margin:16px 0}
+.box.good{border-left-color:var(--ok);background:#f0faf4}
+.box.warn{border-left-color:var(--warn);background:#fef7f0}
+.box.sev{border-left-color:var(--sev);background:#fdf3f2}
+.box .t{font-weight:700;margin-bottom:8px;font-size:14.5px}
+blockquote{border-left:3px solid #95a5a6;background:#fafbfc;margin:12px 0;
+  padding:11px 18px;color:#33475b;font-size:13.4px}
+.formula{background:#f7f9fb;border:1px solid #e1e8ed;border-radius:5px;padding:13px 16px;
+  margin:12px 0;font-family:'Consolas',monospace;font-size:12.8px;overflow-x:auto;line-height:1.85}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;margin:14px 0;
+  padding:12px 16px;background:#f8fafb;border-radius:6px;border:1px solid #e3e8ec}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:13px;height:13px;border-radius:3px;display:inline-block}
+footer{text-align:center;color:var(--text-light);font-size:12.5px;padding:26px 20px;line-height:1.9}
+.hidden{display:none}
+@media print{body{background:#fff}.version-tabs{display:none}
+  .container{box-shadow:none;margin:0;max-width:100%}.hidden{display:block !important}}
+@media(max-width:640px){.container{padding:24px 18px;margin:16px}
+  .verdict .score{font-size:46px}table{font-size:12.4px}}
+</style>
 </head>
 <body>
-    <header>
-        <h1>🔐 BZD数学建模论文AI痕迹审计报告</h1>
-        <p>两层递进式检查 | 学术科研级分析 | v2.0</p>
-    </header>
 
-    <div class="container">
-        <h2>📍 核心结论</h2>
-        <div class="section">
-            <p><strong>论文标题：</strong> [论文标题]</p>
-            <p><strong>最终AI风险分：</strong> <span style="font-size: 20px; color: #2c5aa0; font-weight: bold;">[X]/100</span></p>
-            <p><strong>风险等级：</strong> 
-                <span class="badge badge-low">🟢 低</span> / 
-                <span class="badge badge-mid">🟡 中低</span> / 
-                <span class="badge badge-high">🔴 中高</span>
-            </p>
-            <p style="margin-top: 10px;"><strong>最终建议：</strong> 
-                <span style="color: #27ae60; font-weight: bold;">可直接接收</span> / 
-                <span style="color: #f39c12; font-weight: bold;">需改进</span> / 
-                <span style="color: #c0392b; font-weight: bold;">建议拒稿</span>
-            </p>
-        </div>
+<header>
+  <h1>数学建模论文 AI 痕迹审计报告</h1>
+  <div class="sub">{{论文标题}}</div>
+  <div class="meta">BZD 审计框架 v2.2 严格判分版 · 九维融合检测 · {{审计日期}}</div>
+  <div class="version-tabs">
+    <button id="tab-brief" class="active" onclick="showView('brief')">简洁版</button>
+    <button id="tab-full" onclick="showView('full')">完整版</button>
+  </div>
+</header>
 
-        <h2>⚠️ 问题定位（优先级排序）</h2>
-        
-        <h3>🔴 P0优先级（影响最大，必须改进）</h3>
-        <div class="problem">
-            <strong>位置：P[X] - [章节名]</strong><br>
-            ❌ 问题："[原文问题句子]"<br>
-            ✓ 改为："[改进建议]"
-        </div>
-        <div class="problem">
-            <strong>位置：P[X] - [章节名]</strong><br>
-            ❌ 问题："[原文问题句子]"<br>
-            ✓ 改为："[改进建议]"
-        </div>
+<!-- ═══ 简洁版 ═══ -->
+<div class="container" id="view-brief">
 
-        <h3>🟠 P1优先级（快速可改，容易优化）</h3>
-        <div class="problem">
-            <strong>位置：P[X] - [章节名]</strong><br>
-            ❌ 问题："[原文问题句子]"<br>
-            ✓ 改为："[改进建议]"
-        </div>
-
-        <h3>🟢 P2优先级（锦上添花，可选改进）</h3>
-        <div class="problem">
-            <strong>位置：P[X] - [章节名]</strong><br>
-            ❌ 问题："[原文问题句子]"<br>
-            ✓ 改为："[改进建议]"
-        </div>
-
-        <h2>📊 第一层：五维框架评分</h2>
-        <table>
-            <tr>
-                <th>维度</th>
-                <th>权重</th>
-                <th>得分</th>
-                <th>说明</th>
-            </tr>
-            <tr>
-                <td><strong>语言模板化</strong></td>
-                <td>60%</td>
-                <td style="color: #2c5aa0; font-weight: bold;">[X]/100</td>
-                <td>高频连接词、拔高词、排比句、被动句</td>
-            </tr>
-            <tr>
-                <td><strong>结构与论证</strong></td>
-                <td>12%</td>
-                <td style="color: #2c5aa0; font-weight: bold;">[X]/100</td>
-                <td>逻辑完整、问题分析清晰</td>
-            </tr>
-            <tr>
-                <td><strong>建模专属性</strong></td>
-                <td>15%</td>
-                <td style="color: #2c5aa0; font-weight: bold;">[X]/100</td>
-                <td>本题特征与模型选择对应度</td>
-            </tr>
-            <tr>
-                <td><strong>求解与验证</strong></td>
-                <td>10%</td>
-                <td style="color: #2c5aa0; font-weight: bold;">[X]/100</td>
-                <td>结果验证、灵敏度分析</td>
-            </tr>
-            <tr>
-                <td><strong>来源与一致性</strong></td>
-                <td>3%</td>
-                <td style="color: #2c5aa0; font-weight: bold;">[X]/100</td>
-                <td>参考文献、参数溯源</td>
-            </tr>
-            <tr style="background: #f0f4f8; font-weight: bold;">
-                <td colspan="2">第一层总分</td>
-                <td style="color: #2c5aa0;">[X]/100</td>
-                <td></td>
-            </tr>
-        </table>
-
-        <h2>🔍 第二层：建模逻辑审查</h2>
-        <table>
-            <tr>
-                <th>检查项</th>
-                <th>得分</th>
-                <th>评价</th>
-            </tr>
-            <tr>
-                <td><strong>模型常用性</strong><br><small>是否为竞赛常见模型</small></td>
-                <td style="color: #2c5aa0; font-weight: bold;">[X]/100</td>
-                <td><span class="badge badge-low">✓ 常见</span> / <span class="badge badge-high">✗ 高频</span></td>
-            </tr>
-            <tr>
-                <td><strong>复杂度评估</strong><br><small>是否过度工程化</small></td>
-                <td style="color: #2c5aa0; font-weight: bold;">[X]/100</td>
-                <td><span class="badge badge-low">✓ 合理</span> / <span class="badge badge-high">✗ 过度</span></td>
-            </tr>
-            <tr>
-                <td><strong>华而不实识别</strong><br><small>五大特征检查</small></td>
-                <td style="color: #2c5aa0; font-weight: bold;">[X]/100</td>
-                <td><span class="badge badge-low">✓ 通过</span> / <span class="badge badge-high">✗ 存在</span></td>
-            </tr>
-            <tr>
-                <td><strong>三问法评价</strong><br><small>模型选择论证完整度</small></td>
-                <td style="color: #2c5aa0; font-weight: bold;">[X]%</td>
-                <td>[X]个问题通过 / [X]个问题缺失</td>
-            </tr>
-            <tr style="background: #f0f4f8; font-weight: bold;">
-                <td>第二层总分</td>
-                <td style="color: #2c5aa0;">[X]/100</td>
-                <td></td>
-            </tr>
-        </table>
-
-        <h2>📈 最终评分与推荐</h2>
-        <div class="section" style="border-left-color: #27ae60;">
-            <p><strong>最终AI风险分：</strong> <span style="font-size: 18px; color: #2c5aa0; font-weight: bold;">([第一层] + [第二层]) ÷ 2 = [X]/100</span></p>
-            <p style="margin-top: 10px;"><strong>风险等级对应：</strong></p>
-            <ul style="margin-left: 20px; margin-top: 8px;">
-                <li><span class="badge badge-low">🟢 0-20</span> 低风险 — 语言规范、建模清晰、无AI迹象</li>
-                <li><span class="badge badge-mid">🟡 21-35</span> 中低风险 — 有改进空间，但无严重问题</li>
-                <li><span class="badge badge-high">🔴 36-54</span> 中风险 — 多维度问题，需深度检查</li>
-                <li><span class="badge badge-high">🔴 55-74</span> 中高风险 — 可能涉及AI拼装</li>
-                <li><span class="badge badge-high">⛔ 75-100</span> 高风险 — 确认有AI拼装迹象</li>
-            </ul>
-            <p style="margin-top: 12px;"><strong>最终推荐：</strong></p>
-            <ul style="margin-left: 20px;">
-                <li>✅ 接收 — 评分 < 20，无明显AI痕迹</li>
-                <li>⚠️ 有条件接收 — 评分 20-35，改进后可接收</li>
-                <li>❌ 强制改稿或拒稿 — 评分 > 35，多维度问题</li>
-            </ul>
-        </div>
-
-        <h2>📋 参数溯源表</h2>
-        <table>
-            <tr>
-                <th>参数名</th>
-                <th>符号</th>
-                <th>数值</th>
-                <th>来源</th>
-                <th>位置</th>
-            </tr>
-            <tr>
-                <td>[参数1]</td>
-                <td>α</td>
-                <td>[数值]</td>
-                <td>✓ 赛题直接给出</td>
-                <td>P[X]</td>
-            </tr>
-            <tr>
-                <td>[参数2]</td>
-                <td>β</td>
-                <td>[数值]</td>
-                <td>✓ Q1推导</td>
-                <td>P[X]</td>
-            </tr>
-            <tr>
-                <td>[参数3]</td>
-                <td>γ</td>
-                <td>[数值]</td>
-                <td>❌ 来源不明</td>
-                <td>P[X]</td>
-            </tr>
-        </table>
-
-        <h2>💡 最优先修改的五项</h2>
-        <ol style="margin-left: 20px;">
-            <li><strong>P0-1：</strong> [具体问题] → [改进方向]</li>
-            <li><strong>P0-2：</strong> [具体问题] → [改进方向]</li>
-            <li><strong>P1-1：</strong> [具体问题] → [改进方向]</li>
-            <li><strong>P1-2：</strong> [具体问题] → [改进方向]</li>
-            <li><strong>P2-1：</strong> [具体问题] → [改进方向]</li>
-        </ol>
-
+  <!-- 有维度<55时必须出现；否则整块删除 -->
+  <div class="alert-zone">
+    <div class="hd">⚠ 需要处理的问题 <span class="cnt">{{N}} 项</span></div>
+    <div class="alert-item">
+      <div class="ti">🔴 严重 · {{维度名}} — 得分 {{X}}/100</div>
+      <div class="row"><b>问题：</b>{{具体描述}}</div>
+      <div class="row"><b>证据：</b>{{页码/章节}}</div>
+      <div class="row"><b>改法：</b>{{可直接执行的具体动作}}</div>
     </div>
+  </div>
 
-    <footer>
-        <p><strong>🔐 BZD数学建模社制作</strong> | 学术评审级精细分析工具</p>
-        <p style="margin-top: 8px;">版本：v2.0 | © 2024 BZD数学建模社 | 本报告仅供学术评审和教学参考</p>
-    </footer>
+  <section>
+    <h2>一、审计结论</h2>
+    <div class="verdict v-ok">
+      <div class="score">{{风险分}}<small>/100</small></div>
+      <div class="desc">
+        <div class="lv">{{🟢 低风险}}</div>
+        <div class="note">{{一句话总评}}<br><strong>建议：{{处理意见}}</strong></div>
+      </div>
+    </div>
+    <table>
+      <tr><th>层级</th><th class="num">质量分</th><th class="num">风险分</th><th>核心判断</th></tr>
+      <tr><td>第一层：九维语言+事实</td><td class="num">{{}}</td><td class="num">{{}}</td><td>{{}}</td></tr>
+      <tr><td>第二层：建模逻辑</td><td class="num">{{}}</td><td class="num">{{}}</td><td>{{}}</td></tr>
+      <tr style="font-weight:700;background:#eef4f9"><td>最终</td><td class="num">{{}}</td><td class="num">{{}}</td><td>{{}}</td></tr>
+    </table>
+    <p style="font-size:13px;color:var(--text-light)">置信度：<strong>{{}}</strong>（{{材料说明}}）</p>
+  </section>
+
+  <section>
+    <h2>二、九维评分速览</h2>
+    <div class="legend">
+      <span><i style="background:var(--sev)"></i>严重 &lt;30</span>
+      <span><i style="background:var(--warn)"></i>警示 30–54</span>
+      <span><i style="background:var(--note)"></i>注意 55–79</span>
+      <span><i style="background:var(--ok)"></i>通过 ≥80</span>
+    </div>
+    <table>
+      <tr><th>维度</th><th class="ctr">权重</th><th class="num">得分</th><th class="ctr">状态</th><th>依据</th></tr>
+      <tr><td>1 高频连接词</td><td class="ctr">20%</td><td class="num">{{}}</td><td class="ctr">{{}}</td><td>{{}}</td></tr>
+      <tr><td>2 排比/同构句式</td><td class="ctr">12%</td><td class="num">{{}}</td><td class="ctr">{{}}</td><td>{{}}</td></tr>
+      <tr><td>3 拔高词（5级）</td><td class="ctr">12%</td><td class="num">{{}}</td><td class="ctr">{{}}</td><td>{{}}</td></tr>
+      <tr><td>4 被动句占比</td><td class="ctr">9%</td><td class="num">{{}}</td><td class="ctr">{{}}</td><td>{{}}</td></tr>
+      <tr><td>5 段落规律性</td><td class="ctr">6%</td><td class="num">{{}}</td><td class="ctr">{{}}</td><td>{{}}</td></tr>
+      <tr><td>6 文本复杂度</td><td class="ctr">1%</td><td class="num">{{}}</td><td class="ctr">{{}}</td><td>{{}}</td></tr>
+      <tr><td>7 引文验证</td><td class="ctr">15%</td><td class="num">{{}}</td><td class="ctr">{{}}</td><td>{{}}</td></tr>
+      <tr><td>8 数值一致性</td><td class="ctr">15%</td><td class="num">{{}}</td><td class="ctr">{{}}</td><td>{{}}</td></tr>
+      <tr><td>9 术语一致性</td><td class="ctr">10%</td><td class="num">{{}}</td><td class="ctr">{{}}</td><td>{{}}</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>三、一票否决项核查</h2>
+    <table>
+      <tr><th>否决条件</th><th class="ctr">本文</th><th>结论</th></tr>
+      <tr><td>参考文献确认不存在</td><td class="ctr">{{}}</td><td>{{}}</td></tr>
+      <tr><td>引文作者/年份/期刊不符</td><td class="ctr">{{}}</td><td>{{}}</td></tr>
+      <tr><td>参数矛盾且无解释（&gt;5%）</td><td class="ctr">{{}}</td><td>{{}}</td></tr>
+      <tr><td>数据集/规模与实际不符</td><td class="ctr">{{}}</td><td>{{}}</td></tr>
+      <tr><td>结果无法由所述方法复现</td><td class="ctr">{{}}</td><td>{{}}</td></tr>
+    </table>
+  </section>
+
+</div>
+
+<!-- ═══ 完整版 ═══ -->
+<div class="container hidden" id="view-full">
+  {{完整版内容：
+    一、审计对象与边界（含置信度说明）
+    二、第一层九维逐维展开（每维给出：检测过程表格 + 判分依据 + 得分）
+    三、第二层五项逐项展开（含三问法表、十项对照表、跨问数据流图）
+    四、最终评分（formula 块展示完整计算过程）
+    五、改进清单（按 严重/警示/注意 排序，每项含 位置+改法+工作量）
+    六、审计边界声明}}
+</div>
+
+<footer>
+  <strong>BZD 数模社制作</strong><br>
+  审计框架 v2.2 严格判分版 · 九维融合检测（语言 60% + 事实 40%）· 一票否决 + 强制标红<br>
+  {{审计日期}} · 置信度 {{}} · 支持打印与存档
+</footer>
+
+<script>
+function showView(v){
+  document.getElementById('view-brief').classList.toggle('hidden', v!=='brief');
+  document.getElementById('view-full').classList.toggle('hidden', v!=='full');
+  document.getElementById('tab-brief').classList.toggle('active', v==='brief');
+  document.getElementById('tab-full').classList.toggle('active', v==='full');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
 </body>
 </html>
 ```
 
 ---
 
-## 🚀 使用流程
+# ✅ 交付前自检清单
 
-### 步骤1：准备文件
-- 复制本Prompt文档全部内容
-- 准备要审计的论文（可以是文本、PDF内容复制、Word内容复制）
+AI 生成报告后，请对照本清单核对：
 
-### 步骤2：发送给AI
-```
-我有一篇数学建模论文需要进行AI痕迹审计。
+**计算正确性**
+- [ ] 语言层六维权重用的是 20/12/12/9/6/1，**没有**再乘 0.60
+- [ ] 已执行 `风险分 = 100 − 质量分` 的转换
+- [ ] 用风险分（不是质量分）查的等级表
+- [ ] 最终分 = 两层**风险分**的平均
 
-【审计指南】
-[粘贴本Prompt文档的全部内容]
+**证据完整性**
+- [ ] 每个维度的判分都附了论文中的具体位置
+- [ ] 每个标红项都有「问题 + 证据位置 + 具体改法」三要素
+- [ ] 一票否决五项逐条核查并给出结论
+- [ ] 参数溯源表列出了不少于 8 个关键参数并复算了算术关系
+- [ ] 引文抽查了不少于 5 篇并标注 L1/L2/L3 结果
 
-【论文内容】
-[粘贴论文全文或核心部分]
-
-请按照上述指南进行完整审计，最后生成HTML格式的审计报告。
-```
-
-### 步骤3：等待AI生成报告
-AI将：
-1. 按第一层标准逐部分扫描
-2. 按第二层标准深度评审
-3. 计算两层评分
-4. 生成完整的HTML报告
-
-### 步骤4：保存和查看
-- 将AI生成的HTML代码复制
-- 保存为 `.html` 文件（例：`审计报告.html`）
-- 用浏览器打开查看报告
+**呈现规范**
+- [ ] 任一维度 < 55 时，顶部有红色警示区
+- [ ] 标红行用了红色背景，不是只加图标
+- [ ] 没有用"建议优化""可以更好"等模糊措辞描述标红项
+- [ ] 简洁版 / 完整版双标签可正常切换
+- [ ] 报告标注了"BZD 数模社制作"与置信度
 
 ---
 
-## ✅ 质量保证清单
+# ❓ 常见问题
 
-AI在执行审计时应检查：
-- [ ] 按五维标准逐一评分
-- [ ] 第一层和第二层都有具体的证据支撑
-- [ ] 给出P0/P1/P2优先级排序
-- [ ] 参数溯源表完整
-- [ ] 最终评分在0-100之间
-- [ ] HTML格式正确，可在浏览器打开
-- [ ] 所有[X]都已填入具体数值
+**Q：论文里写了"使用了 AI 工具声明"，是不是直接算高风险？**
+A：不是。本工具判的是 AI **拼装**痕迹，不是是否用过 AI。声明使用
+AI 辅助、但建模主线由人主导、参数可溯源、结果可复算的论文，
+完全可以是低风险。合规的 AI 辅助应当被鼓励，而非惩罚。
 
----
+**Q：论文用了深度学习就一定高风险吗？**
+A：不一定。若题目本身是大规模非线性预测任务、数据量充足，
+且论文给出了与基础模型的量化对比（说明为什么回归/ARIMA 不够用），
+应降低该项风险。判断标准是**必要性论证**，不是模型名称。
 
-## 📞 常见问题
+**Q：数值有 0.1% 的差异，算不算造假？**
+A：看有没有解释。**主动披露**并说明来源（求解器容差、独立实现
+初始化差异等）→ 不但不扣分，反而是人工复算的**加分证据**。
+未加解释的 1–5% 偏差 → 35 分标红；>5% → 触发否决。
 
-**Q：如果AI生成的HTML打不开怎么办？**
-A：检查HTML是否完整（应以 `<!DOCTYPE html>` 开头，`</html>` 结尾），复制整个代码块。
+**Q：找不到某篇参考文献，是不是就判虚构？**
+A：先排除检索方式问题——换 Google Scholar / 知网 / OpenAlex 各试一次，
+核对年份和作者拼写。三个渠道都查不到，才判定虚构并触发一票否决。
+报告中应写明"经 X、Y、Z 三个渠道检索未果"。
 
-**Q：评分不一样怎么办？**
-A：可以多次发送论文给不同AI，取平均分以获得更可靠的结果。
+**Q：AI 没按格式输出，或者报告很敷衍怎么办？**
+A：追加一句：「请严格按照文档中的九维框架逐维给出得分和证据位置，
+不要跳过任何维度；标红项必须包含问题、证据位置、具体改法三要素。」
 
-**Q：论文太长怎么办？**
-A：可以分章节提交，先做单独评分，再综合计算总体评分。
-
----
-
-## 🎯 最后提醒
-
-- 本指南是参考，AI的判断也会受其理解能力影响
-- 对于重要决策（录取/拒稿）建议人工复核
-- 评分不是身份鉴定，仅反映论文的AI风格特征
-- 本方法专针对数学建模竞赛，不适用其他领域
+**Q：论文很长，AI 说超出长度限制？**
+A：分两次发。第一次发本文档 + 论文前半（至各问建模），
+让 AI 先做第一层语言层面检测；第二次发论文后半 + 参考文献，
+补做事实层面与第二层，最后让它汇总出完整报告。
 
 ---
 
-**版本：** v2.0 | **最后更新：** 2024年  
-**维护人：** BZD数学建模社
+# ⚠️ 使用边界
+
+- 本评分**不是作者身份概率**，不能替代查重或官方 AIGC 检测服务
+- 仅凭成稿无法证明某句话由 AI 生成
+- 数模论文的规范句式、模型名称、专业术语天然可能重复，
+  框架已在维度 1 和维度 5 设置豁免
+- 模型的**创新性** ≠ AI 拼装，本工具只判断模型选择的**合理性**
+- 报告中的每一项判定都必须附证据位置，无证据的判定不成立
+
+---
+
+**BZD 数模社制作** · 审计框架 v2.2 严格判分版
+适用：CUMCM 国赛 / 美赛 / 研赛 / 校赛等各类数学建模竞赛
+平台：Claude · ChatGPT · Gemini · Kimi · DeepSeek · 豆包 等任意长文本 AI
