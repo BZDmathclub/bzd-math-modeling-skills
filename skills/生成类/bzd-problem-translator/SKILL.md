@@ -19,6 +19,7 @@ Read completely before analysis:
 
 - [references/sentence-interpretation-rules.md](references/sentence-interpretation-rules.md)
 - [references/historical-review-signals.md](references/historical-review-signals.md)
+- For CUMCM A-E problems, read [references/cumcm-abcde-translation-signals.md](references/cumcm-abcde-translation-signals.md) after identifying the problem letter.
 - [references/md-output-standard.md](references/md-output-standard.md)
 
 ## Workflow
@@ -27,7 +28,7 @@ Read completely before analysis:
 2. Reconstruct the problem's global story: object, state, mechanism, data, decision, objective, and final deliverables.
 3. Divide the source into auditable units. Keep one complete source sentence per unit; split a semicolon or enumerated clause only when it contains independently enforceable requirements. Assign stable IDs such as `B01`, `D03`, `Q2-04`, and `A01`.
 4. Build a coverage ledger. Preserve the exact source sentence and translate it into concise plain Chinese modeling language.
-5. For each unit, extract explicit facts, implied meaning, upstream/downstream dependencies, omission risk, and required solution evidence.
+5. For each unit, extract explicit facts, implied meaning, upstream/downstream dependencies, omission risk, and required solution evidence. For CUMCM, use the matching A-E historical signals only as a question-generating checklist; do not inject a historical condition that is absent from the current prompt.
 6. Resolve cross-sentence terminology. Flag synonyms, overloaded words, reference frames, time scopes, populations, repeated entities, and changing assumptions.
 7. Trace every numbered question backward to supporting sentences and forward to later questions.
 8. Build the mandatory cross-question dependency chain as one Mermaid flowchart. For every question, identify its incoming definitions/data/previous results and outgoing results/constraints/validation uses. Draw genuinely independent questions as parallel branches connected to shared inputs and the whole-problem objective; never omit a numbered question.

@@ -2,7 +2,7 @@
 
 Use these anchors only as fallback guidance. The problem-specific rubric and learned official rules control the actual weights. Score intermediate quality proportionally; do not default to the midpoint.
 
-Within each problem, score `模型建立`, `模型求解`, and `结果与回答` separately using [atomic-deduction-scoring.md](atomic-deduction-scoring.md). Do not assign an impressionistic block percentage: freeze atomic checks, start from the block's 90% ceiling, deduct 1-3 points per unmet item, and show the ledger. A block that fundamentally answers the wrong task receives zero; a different but valid and evidenced approach does not.
+Within each problem, organize checks under `模型建立`, `模型求解`, and `结果与回答` using [atomic-deduction-scoring.md](atomic-deduction-scoring.md). Atomic nominal weights must sum to the problem weight. Do not assign an impressionistic percentage: deduct 1-3 points separately for every unmet item, without a 10-point deduction cap, and floor the problem score at zero. A different but valid and evidenced approach does not trigger a deduction.
 
 ## Fixed-category anchors
 

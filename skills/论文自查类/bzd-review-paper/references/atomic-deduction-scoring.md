@@ -79,7 +79,7 @@ For every problem and every one of its three blocks, write several observable at
 
 ## 4. Deduction scale
 
-Start each block at its `90% ceiling`, then subtract every paper defect.
+List every defect under its corresponding block, then calculate the score at the problem level from the problem's `90% ceiling`.
 
 | Deduction | Use when |
 |---:|---|
@@ -89,21 +89,23 @@ Start each block at its `90% ceiling`, then subtract every paper defect.
 
 Formula:
 
-`block_earned = max(0, 0.90 × block_weight - Σ atomic_deductions)`
+First assign nominal weights to all atomic points. Their sum must equal the nominal problem weight, but the nominal weight is not the operational deduction for a defect.
 
-If `Σ atomic_deductions >= block_weight`, explicitly record `扣分已达到该板块名义权重，板块按0分计算`. For the 15-point model-construction example, accumulated deductions reaching 15 points make that block zero; arithmetic may reach zero earlier because its earnable ceiling is 13.5.
+`problem_nominal_weight = Σ atomic_nominal_weights`
+
+`problem_deduction = Σ all 1-3 point atomic deductions in 模型建立、模型求解、结果与回答`
+
+`problem_earned = max(0, 0.90 × problem_nominal_weight - problem_deduction)`
+
+Do not cap the diagnostic deduction sum at 10. For example, a 15-point problem may contain approximately 15 one-point nominal checks; if every check has a severe failure, the visible deduction ledger may total about 45 points. The earned score is simply floored at zero.
 
 Every unmet atomic item receives its own 1-3 point entry. A rubric block containing five requirements therefore needs five separately verifiable rows, unless one requirement must be split further to remain observable. Do not replace the ledger with a vague holistic score. Repeated manifestations of one root defect may be grouped, but distinct failures must be deducted separately. Never report an earned score below zero.
 
-## 5. Whole-block zero rule
+## 5. Central-error handling
 
-Set the relevant block to zero when its central answer is fundamentally inconsistent with the task or frozen answer requirement:
+A central error does not replace the atomic ledger. Split its observable consequences into distinct scoring points and assign 3 points to each genuinely separate failure, for example: wrong mathematical target, unusable solution procedure, missing required result, or violated hard constraint. Do not create duplicate deductions for multiple symptoms of one root error.
 
-- `模型建立 = 0` when the model solves a materially different problem, violates a hard mechanism/information/constraint requirement, or rests on a central false relationship;
-- `模型求解 = 0` when the reported method cannot solve the stated model, uses forbidden/unavailable information, or its core computation is incompatible with the required answer;
-- `结果与回答 = 0` when the requested result is absent, answers a different target, or contradicts a verified required/official result without a defensible alternative derivation.
-
-Do not trigger this rule merely because the paper uses a different model, algorithm or numerical route than the calibration answer. A novel alternative remains eligible when it satisfies the task, respects all constraints, is mathematically coherent and is supported by reproducible evidence. When uncertainty remains, use itemized deductions rather than a whole-block zero and explain what evidence is missing.
+A novel alternative remains valid when it satisfies the task, respects all constraints, is mathematically coherent and is supported by reproducible evidence. Different model names or numerical routes are not deductions by themselves.
 
 ## 6. Required scoring ledger
 
@@ -114,10 +116,10 @@ For every problem, output at least:
 
 After all rows, show:
 
-- block ceiling;
-- sum of 1-3 point paper deductions;
-- any whole-block zero reason;
-- block earned score;
-- problem subtotal.
+- problem and block weights;
+- every separate 1-3 point deduction;
+- uncapped problem deduction sum;
+- total operational deduction, even when it exceeds the nominal problem weight;
+- problem 90% ceiling and final problem score.
 
 The arithmetic must be reproducible from visible rows. Keep `评委满分保留` separate from paper defects.

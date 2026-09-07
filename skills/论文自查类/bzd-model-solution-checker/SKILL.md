@@ -16,6 +16,7 @@ description: Review the model establishment, numerical solution, result analysis
 
 - [references/model-establishment-and-solution.md](references/model-establishment-and-solution.md)
 - [references/validation-and-sensitivity.md](references/validation-and-sensitivity.md)
+- 对高教社杯国赛 A—E 题，在独立重建当前赛题任务后再阅读 [references/cumcm-abcde-solution-redflags.md](references/cumcm-abcde-solution-redflags.md)。历史红线只有与当前题目和论文证据匹配时才能用于诊断，不能把历史标准答案当成唯一解。
 
 ## 审查目标
 

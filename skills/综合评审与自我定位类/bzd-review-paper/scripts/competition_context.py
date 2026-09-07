@@ -78,20 +78,21 @@ def main() -> None:
     national_difficulty = number(region_diff, national_key)
     provincial_difficulty = number(region_diff, provincial_key)
     # Region difficulty is normalized around 50. National-award competition
-    # receives the wider +/-15 range; provincial-award competition uses +/-10.
+    # receives the wider +/-25 range; provincial-award competition uses +/-15.
     national_region_delta = (
         0.0
         if national_difficulty is None
-        else clamp((50 - national_difficulty) / 50 * 15, -15, 15)
+        else clamp((50 - national_difficulty) / 50 * 25, -25, 25)
     )
     provincial_region_delta = (
         0.0
         if provincial_difficulty is None
-        else clamp((50 - provincial_difficulty) / 50 * 10, -10, 10)
+        else clamp((50 - provincial_difficulty) / 50 * 15, -15, 15)
     )
 
-    school_delta = 0.0
-    advisor_delta = 0.0
+    provincial_school_delta = 0.0
+    national_school_delta = 0.0
+    advisor_multiplier = 1.0
     award_ceiling = None
     national_probability_ceiling = None
     advisor_status = "not_applicable"
@@ -103,24 +104,40 @@ def main() -> None:
         confidence = "低"
     else:
         if truthy(school.get("is_modeling_strong_school", "")):
-            school_delta = 1.5
+            strong_totals = [
+                number(row, "national_five_years")
+                for row in schools
+                if truthy(row.get("is_modeling_strong_school", ""))
+            ]
+            strong_totals = [value for value in strong_totals if value is not None]
+            current_total = number(school, "national_five_years")
+            if current_total is not None and strong_totals and max(strong_totals) > min(strong_totals):
+                provincial_school_delta = clamp(
+                    5 + 5 * (current_total - min(strong_totals)) / (max(strong_totals) - min(strong_totals)),
+                    5,
+                    10,
+                )
+            else:
+                provincial_school_delta = 5.0
+            national_school_delta = -10.0
         frequency = number(school, "top_advisor_frequency") or 0.0
         concentrated = truthy(school.get("top_advisor_frequency_over_30pct", ""))
-        if concentrated:
+        if concentrated and args.score > 45:
             if advisor_missing(args.advisor):
                 advisor_status = "missing_advisor_lower_confidence"
                 confidence = "中低"
             elif normalize(args.advisor) == normalize(school.get("top_advisor", "")):
-                advisor_delta = 0.5
+                advisor_multiplier = 1.2
                 advisor_status = "matches_top_advisor"
             else:
-                advisor_delta = -min(4.0, 1.5 + 5 * max(0.0, frequency - 0.30))
+                advisor_multiplier = 0.8
                 advisor_status = "different_from_top_advisor"
         else:
-            advisor_status = "not_concentrated"
+            advisor_status = "score_not_above_45" if concentrated else "not_concentrated"
 
-    provincial_score = clamp(args.score + provincial_region_delta, 0, 90)
-    national_score = clamp(args.score + national_region_delta + school_delta + advisor_delta, 0, 90)
+    provincial_score = clamp(args.score + provincial_region_delta + provincial_school_delta, 0, 90)
+    advisor_adjusted_base = args.score * advisor_multiplier
+    national_score = clamp(advisor_adjusted_base + national_region_delta + national_school_delta, 0, 90)
     if school is None:
         national_score = min(national_score, 74.9)
 
@@ -167,13 +184,18 @@ def main() -> None:
             "national_awards_five_years": number(school, "national_five_years"),
             "national_forecast_2026": number(school, "national_forecast_2026"),
             "is_modeling_strong_school": school.get("is_modeling_strong_school"),
-            "school_delta": school_delta,
+            "provincial_school_delta": round(provincial_school_delta, 2),
+            "national_school_delta": round(national_school_delta, 2),
             "top_advisor": school.get("top_advisor"),
             "top_advisor_count": number(school, "top_advisor_count"),
             "top_advisor_frequency": number(school, "top_advisor_frequency"),
             "top_advisor_frequency_over_30pct": school.get("top_advisor_frequency_over_30pct"),
         },
-        "advisor_adjustment": {"status": advisor_status, "delta": round(advisor_delta, 2)},
+        "advisor_adjustment": {
+            "status": advisor_status,
+            "multiplier": advisor_multiplier,
+            "adjusted_base_score": round(advisor_adjusted_base, 2),
+        },
         "provincial_competition_score": round(provincial_score, 1),
         "national_competition_score": round(national_score, 1),
         "award_prediction_ceiling": award_ceiling,

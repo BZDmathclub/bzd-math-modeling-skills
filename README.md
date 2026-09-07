@@ -1,136 +1,128 @@
 # BZD Math Modeling Skills
 
-面向数学建模竞赛的 BZD Skills 合集，支持 **Codex** 与 **Claude Code**。
+面向数学建模竞赛完整流程的 BZD Skills 合集，支持 **Codex** 与 **Claude Code**。
 
-本项目围绕数学建模竞赛的完整流程持续研发，目前覆盖赛题理解、建模思路生成、模型选型、论文分章节自查、全文格式检查、综合评审、竞赛位次预估和高校国奖数据查询等场景。
+本项目以一个总控 Skill 为统一入口，覆盖赛题逐句理解、全局建模思路生成、模型适配性判断、论文分章节自查、AIGC 痕迹审计、全文格式检查、评委式综合评审、竞赛位次预估和高校国奖数据查询。
 
-相关 Skills 主要基于 2020—2025 年高教社杯全国大学生数学建模竞赛赛题、评分细则、评分要点、评阅概述及完整评阅流程进行整理和蒸馏，并结合 2026 年竞赛论文格式与 AI 工具披露要求持续更新。
+相关规则主要基于 2020—2025 年高教社杯全国大学生数学建模竞赛赛题、评分细则、评分要点、评阅概述及完整评阅流程整理，并结合数学建模论文写作规范、模型字典和历史获奖数据持续更新。
 
-> 本项目不是竞赛官方工具。所有模型建议、论文得分、位次预测和备赛建议仅供参考，最终应以当届组委会及赛区发布的正式规则为准。
+> 本项目不是竞赛官方工具。模型建议、论文评分、位次预测和备赛判断均为辅助参考，最终以当届组委会与所在赛区发布的正式规则及实际评审结果为准。
 
-## 三个核心 Skills
+## 快速开始
 
-| Skill | 核心作用 | 主要输入 | 主要输出 |
-|---|---|---|---|
-| [`bzd-model-dictionary`](skills/论文自查类/bzd-model-dictionary/) | 查询模型字典并判断候选模型是否适合当前题目与数据 | 赛题、数据结构、候选模型、求解思路 | 模型档案、适配性结论、使用条件、缺陷、检验方法和替代模型 |
-| [`bzd-review-paper`](skills/论文自查类/bzd-review-paper/) | 根据本次赛题重新制定百分制细则，并以评委视角评审整篇论文 | 竞赛类型、完整赛题、完整论文；国赛可补充组别、赛区、学校和指导教师 | 原始得分、格式质量系数、最终得分、位次估计、逐项扣分和 HTML 报告 |
-| [`bzd-paper-format-checker`](skills/论文自查类/bzd-paper-format-checker/) | 对整篇论文的结构、排版和各章节格式合规性进行一次总检 | 完整 PDF；可选 Word 文档 | 格式检查报告、逐项扣分、格式规范分、格式质量系数和自查表 |
-
-### bzd-model-dictionary
-
-`bzd-model-dictionary` 是基于 **BZD数模社·数模模型字典** 构建的模型查询与选型自查 Skill。
-
-用户提供赛题、数据结构、候选模型和求解思路后，Skill 会查询该模型的适用场景、数据要求、关键假设、输入输出、禁忌点、模型缺陷和检验方法，并结合当前任务判断模型选择是否合理。
-
-适配性结论分为：
-
-- **合适**：模型与题目目标、数据结构和变量类型基本匹配；
-- **有条件合适**：模型方向合理，但需要补充预处理、假设检验或适用条件；
-- **不合适**：模型与任务目标、数据类型或核心假设明显冲突；
-- **证据不足**：当前信息不足，无法作出可靠判断。
-
-除适配性结论外，Skill 还会推荐可替代或配套使用的同类模型，帮助使用者减少机械套用模型的情况。
-
-### bzd-review-paper
-
-`bzd-review-paper` 使用近五年国赛评阅资料和完整评阅流程进行归纳和蒸馏。每次评审时，Skill 会重新读取当前赛题、分解任务并独立制定评分细则，不沿用历史对话中的既有解题思路或评价结论。
-
-每一道问题均拆分为：
-
-1. **模型建立**；
-2. **模型求解**；
-3. **结果与回答**。
-
-各板块先执行 90% 得分封顶，再根据当前赛题的评分细则逐条检查：局部轻微缺失扣 1 分，实质性缺失或明显不一致扣 2 分，核心步骤错误、无法复现或严重影响该板块扣 3 分，最低扣至 0 分。若某一板块根本答非所问、违反核心条件且没有成立的替代论证，可将该板块直接判为 0 分。
-
-格式规范分统一为 `-10～10`，并线性映射为 `0～1.00` 的格式质量系数：
+如果不确定应该调用哪个 Skill，直接使用总控入口：
 
 ```text
-格式质量系数 = (格式规范分 + 10) / 20
-最终得分 = 原始得分 × 格式质量系数
+调用 $bzd-modeling-workflow。
+
+当前阶段：刚拿到题目
+赛题：<赛题文件或路径>
+附件：<附件文件或路径，可选>
+
+请识别当前阶段，并按BZD数学建模完整工作流安排下一步。
 ```
 
-若用户已经运行同版本论文的 `bzd-paper-format-checker`，`bzd-review-paper` 可以直接接入其格式得分、资格审查结果和页码证据，避免重复检查和重复扣分。
+总控 Skill 会识别当前阶段，选择需要调用的专项 Skill，记录阶段产物并给出下一步操作；不会在没有必要时机械运行全部检查。
 
-> 创新盲区提示：每年都有少量论文因解题路径高度新颖而获得较高评价。AI评审可能无法充分识别超出常规评阅预期的原创方案，因此存在低估非常规创新路径的可能。
+## Skills 总览
 
-### bzd-paper-format-checker
+### 零、集成与总控类
 
-`bzd-paper-format-checker` 用于整篇论文的格式与写作规范总检，主要检查：
-
-- 摘要是否超过规定页面，能否独立阅读；
-- 页码、正文起始页、目录、页眉页脚和页面结构；
-- 标题层级、编号连续性、字号、字体、行距和缩进；
-- 图题、表题、三线表、公式编号、公式标点和图表重复表达；
-- 正文篇幅与各问题篇幅分配是否合理；
-- 图表、公式与正文是否存在必要的引出、说明和分析；
-- 匿名信息、PDF元数据、隐藏批注和修订记录；
-- 参考文献、附录、支撑材料和程序呈现的格式完整性。
-
-> **使用边界：** `bzd-paper-format-checker` 主要检查各板块是否按照论文规范组织和呈现，属于“全文格式总检”。它不会替代各章节专项 Skill 对内容正确性、逻辑完整性和专业质量的深入检查。若需要详细检查摘要、问题重述、问题分析、模型假设、符号说明、模型建立与求解、AI工具披露、参考文献或附录，仍建议分别调用对应的专项 Skill。
-
-## Skills 分类
-
-### 一、综合评审与自我定位类
-
-| Skill | 主要作用 | 输入 | 输出 |
+| Skill | 作用 | 输入 | 输出 |
 |---|---|---|---|
-| [`bzd-review-paper`](skills/论文自查类/bzd-review-paper/) | 根据赛题制定评分细则并完成论文综合评审 | 竞赛类型、赛题、论文；国赛可补充组别、赛区、学校和指导教师 | 得分、格式质量系数、竞赛位次、详细扣分和 HTML 报告 |
-| [`bzd-cumcm-school-awards`](skills/综合评审与自我定位类/bzd-cumcm-school-awards/) | 查询高校五年国奖数据并评估个人备赛差距 | 学校名称、赛区和个人竞赛经历 | 高校国奖画像、2026 年预测和备赛建议 |
+| [`bzd-modeling-workflow`](skills/总控类/bzd-modeling-workflow/) | 识别竞赛阶段并统一调度读题、建模、写作、自查和终稿评审 | 当前阶段，以及已有赛题、附件、数据、思路、论文、代码或检查报告 | 调用计划、阶段产物索引、去重问题清单、下一步建议和流程进度 |
 
-### 二、生成类
+### 一、生成类
 
-| Skill | 主要作用 | 输入 | 输出 |
+| Skill | 作用 | 输入 | 输出 |
 |---|---|---|---|
-| [`bzd-problem-translator`](skills/生成类/bzd-problem-translator/) | 逐句翻译赛题，识别隐含条件和跨问题关系 | 完整赛题及附件说明 | 题意翻译报告、跨问题联动链 |
-| [`bzd-modeling-ideas`](skills/生成类/bzd-modeling-ideas/) | 生成贯穿全文的建模主线并比较可行模型 | 完整赛题、附件、可选题意报告 | 多模型比较、选型理由、创新与验证方案 |
-| [`bzd-problem-restatement`](skills/生成类/bzd-problem-restatement/) | 根据赛题生成问题重述，也支持已有重述自查 | 完整赛题；自查时另提供已有重述 | 问题背景、问题回顾、研究综述或自查报告 |
-| [`bzd-ai-usage-disclosure`](skills/生成类/bzd-ai-usage-disclosure/) | 生成或检查 AI 工具使用声明与使用详情 | 论文、真实 AI 使用情况、已有披露材料 | AI工具使用声明、使用详情材料和自查结果 |
+| [`bzd-problem-translator`](skills/生成类/bzd-problem-translator/) | 逐句解释赛题，识别定义、约束、数据口径、交付要求和跨问关系 | 完整赛题及附件说明 | Markdown 题意翻译报告、遗漏审计和跨问题联动图 |
+| [`bzd-modeling-ideas`](skills/生成类/bzd-modeling-ideas/) | 从全题角度生成贯穿全文的建模主线，并比较每一问的候选模型 | 完整赛题、附件；可选题意翻译报告 | 问题分析、多模型对比、推荐方案、选型理由、创新与验证建议 |
+| [`bzd-problem-restatement`](skills/生成类/bzd-problem-restatement/) | 生成问题重述初稿，也可检查用户已有的问题重述 | 完整赛题；自查模式另提供已有重述 | 问题背景、问题回顾、研究综述，或问题重述诊断报告 |
+| [`bzd-ai-usage-disclosure`](skills/生成类/bzd-ai-usage-disclosure/) | 根据真实使用情况生成或检查 AI 工具使用声明与使用详情 | 论文、真实 AI 使用记录；可选已有披露材料 | AI 使用声明、使用详情材料和一致性自查结果 |
 
-### 三、论文自查类
+### 二、论文自查类
 
-建议先使用 `bzd-paper-format-checker` 完成全文格式总检，再根据发现的问题调用对应的章节专项 Skill。
-
-| 推荐顺序 | Skill | 自查对象 | 输入 | 输出 |
-|---:|---|---|---|---|
-| 1 | [`bzd-paper-format-checker`](skills/论文自查类/bzd-paper-format-checker/) | 全文结构、排版及各章节格式规范 | 完整 PDF；可选 Word | 全文格式报告、扣分明细、格式规范分和自查表 |
-| 2 | [`bzd-abstract-checker`](skills/论文自查类/bzd-abstract-checker/) | 摘要、题目和关键词的内容质量 | 摘要；可选赛题、题目和关键词 | 独立性判断、逐项诊断和优先修改建议 |
-| 3 | [`bzd-problem-restatement`](skills/论文自查类/bzd-problem-restatement/) | 问题重述 | 完整赛题和已有问题重述 | 任务遗漏、条件失真、章节越界和修改建议 |
-| 4 | [`bzd-problem-analysis-checker`](skills/论文自查类/bzd-problem-analysis-checker/) | 问题分析 | 完整赛题、附件说明和已有问题分析 | 任务映射、跨问联动、问题清单和修改优先级 |
-| 5 | [`bzd-model-assumption-checker`](skills/论文自查类/bzd-model-assumption-checker/) | 模型假设 | 完整赛题、模型假设；可选模型正文 | 逐条诊断、遗漏假设、验证要求和修改优先级 |
-| 6 | [`bzd-symbol-notation-checker`](skills/论文自查类/bzd-symbol-notation-checker/) | 符号说明 | 完整论文，或符号表与模型正文 | 符号遗漏、冲突、单位、上下标和版式诊断 |
-| 7 | [`bzd-model-solution-checker`](skills/论文自查类/bzd-model-solution-checker/) | 模型建立、求解、检验和灵敏度分析 | 完整赛题、论文；可选附件或代码 | 核心正文诊断、复现检查和优先修改建议 |
-| 8 | [`bzd-ai-usage-disclosure`](skills/论文自查类/bzd-ai-usage-disclosure/) | AI工具使用声明与使用详情 | 论文、真实AI使用记录、已有披露材料 | 完整性、一致性、匿名性和责任边界检查 |
-| 9 | [`bzd-reference-appendix-checker`](skills/论文自查类/bzd-reference-appendix-checker/) | 参考文献与附录 | 论文、参考文献、附录、程序和支撑材料 | 引用与附录检查、风险等级和修改建议 |
-| 10 | [`bzd-model-dictionary`](skills/论文自查类/bzd-model-dictionary/) | 模型选型及适用性 | 赛题、数据、候选模型和求解思路 | 字典信息、适配性结论、缺陷、检验方法和替代模型 |
-|11 | [`bzd-paper-aigc-auditor`](skills/论文自查类/bzd-paper-aigc-auditor/) | 论文AI痕迹与建模模板化审计 | 完整数模论文；可选赛题、代码、数据和AI使用记录 | AI风格风险区间、逐板块证据、模型真实性分类和修改建议 |
-| 12| [`bzd-review-paper`](skills/论文自查类/bzd-review-paper/) | 完整论文综合评审 | 竞赛类型、完整赛题和完整论文 | 综合得分、格式系数、预估位次、评委评价和修改顺序 |
-
-### 四、数据查询与备赛辅助类
-
-| Skill | 主要作用 | 输入 | 输出 |
+| Skill | 自查对象 | 输入 | 输出 |
 |---|---|---|---|
-| [`bzd-cumcm-school-awards`](skills/综合评审与自我定位类/bzd-cumcm-school-awards/) | 查询高校历史国奖数据并评估备赛距离 | 学校、赛区、竞赛经历和模拟情况 | 学校画像、国奖预测、省奖与国奖备赛建议 |
+| [`bzd-paper-format-checker`](skills/论文自查类/bzd-paper-format-checker/) | 全文页面结构、排版、篇幅、标题、图表、公式、匿名性和文件卫生 | 完整 PDF；可选 Word | 原子检查结果、逐项扣分、格式规范分、格式质量系数和自查表 |
+| [`bzd-abstract-checker`](skills/论文自查类/bzd-abstract-checker/) | 摘要、论文题目和关键词 | 摘要；可选赛题、题目和关键词 | 摘要独立性判断、逐项问题和优先修改建议 |
+| [`bzd-problem-restatement`](skills/论文自查类/bzd-problem-restatement/) | 问题重述 | 完整赛题和已有问题重述 | 任务遗漏、条件失真、章节越界和修改建议 |
+| [`bzd-problem-analysis-checker`](skills/论文自查类/bzd-problem-analysis-checker/) | 问题分析 | 完整赛题、附件说明和已有问题分析 | 任务映射、模型选择依据、跨问联动和修改优先级 |
+| [`bzd-model-assumption-checker`](skills/论文自查类/bzd-model-assumption-checker/) | 模型假设 | 完整赛题、模型假设；可选模型正文 | 逐条合理性诊断、遗漏假设、验证要求和修改优先级 |
+| [`bzd-symbol-notation-checker`](skills/论文自查类/bzd-symbol-notation-checker/) | 符号说明 | 完整论文，或符号表与相关模型正文 | 符号遗漏、冲突、单位、上下标、首次定义和版式诊断 |
+| [`bzd-model-solution-checker`](skills/论文自查类/bzd-model-solution-checker/) | 模型建立、求解、结果、检验及灵敏度分析 | 完整赛题和论文；可选附件或代码 | 核心正文诊断、复现性检查、红线问题和优先修改建议 |
+| [`bzd-reference-appendix-checker`](skills/论文自查类/bzd-reference-appendix-checker/) | 正文引用、参考文献、附录、代码和支撑材料 | 论文、参考文献、附录、程序及支撑材料 | P0—P3 风险、引用一致性、附录完整性和复现问题 |
+| [`bzd-ai-usage-disclosure`](skills/论文自查类/bzd-ai-usage-disclosure/) | AI 工具使用声明与详情材料 | 论文、真实 AI 使用记录和已有披露材料 | 完整性、一致性、匿名性和责任边界检查 |
+| [`bzd-paper-aigc-auditor`](skills/论文自查类/bzd-paper-aigc-auditor/) | 论文语言 AI 痕迹、建模模板化、模型拼装和伪改进风险 | 完整数模论文；可选赛题、代码、数据和 AI 使用记录 | 风险区间、逐板块证据、模型真实性分类和人工化修改建议 |
+| [`bzd-model-dictionary`](skills/论文自查类/bzd-model-dictionary/) | 候选模型与题目、数据及用途的适配性 | 赛题、数据结构、候选模型和求解思路 | 模型档案、适配结论、使用条件、缺陷、检验方法及替代模型 |
+| [`bzd-review-paper`](skills/论文自查类/bzd-review-paper/) | 完整论文的评委式综合评审 | 竞赛类型、完整赛题和完整论文；国赛可补充组别、赛区、学校和指导教师 | 百分制得分、格式系数、竞赛位次、详细扣分和 HTML 报告 |
+
+> `bzd-paper-format-checker` 是全文格式与呈现方式的快速总检，不能替代各章节专项 Skill 对内容正确性和建模质量的深入检查。非终稿不建议频繁运行严格格式审查，以免消耗较多 Token。
+
+### 三、综合评审与自我定位类
+
+| Skill | 作用 | 输入 | 输出 |
+|---|---|---|---|
+| [`bzd-review-paper`](skills/综合评审与自我定位类/bzd-review-paper/) | 根据当前赛题重新制定评分细则并完成整篇论文评审 | 竞赛类型、完整赛题、完整论文；国赛可补充组别、赛区、学校和指导教师 | 论文质量分、格式质量系数、竞争环境校准、位次估计、详细扣分和 HTML 报告 |
+| [`bzd-cumcm-school-awards`](skills/综合评审与自我定位类/bzd-cumcm-school-awards/) | 查询高校近五年国奖情况，并辅助判断省奖、国奖备赛距离 | 学校、赛区；进度评估时补充个人竞赛与模拟经历 | 高校国奖画像、2026 年经验预测、高频指导教师和备赛建议 |
+
+同名 Skill 可能为方便不同使用场景而出现在多个分类目录中。安装时选择其中一份即可，不要把同名副本重复安装到同一个 Skills 目录。
 
 ## 推荐工作流
 
 ```mermaid
 flowchart LR
-    A["完整赛题"] --> B["bzd-problem-translator"]
-    B --> C["bzd-modeling-ideas"]
-    C --> D["bzd-model-dictionary"]
-    D --> E["完成代码与论文"]
-    E --> F["bzd-paper-format-checker"]
-    F --> G["章节专项自查 Skills"]
-    G --> H["bzd-review-paper"]
-    H --> I["得分、位次与修改建议"]
+    O["bzd-modeling-workflow<br/>统一入口"] --> A["完整赛题与附件"]
+    A --> B["题意翻译"]
+    A --> C["整体建模思路"]
+    A --> D["问题重述初稿"]
+    B --> E["模型字典适配"]
+    C --> E
+    E --> F["代码求解与论文写作"]
+    D --> F
+    F --> G["章节专项自查"]
+    G --> H["AIGC痕迹审计"]
+    H --> I["严格格式检查"]
+    I --> J["最终论文评审"]
+    J --> K["得分、位次与修改建议"]
 ```
+
+### 1. 拿到赛题
+
+- 使用 `bzd-problem-translator` 逐句理解赛题并梳理跨问题联动；
+- 使用 `bzd-modeling-ideas` 生成全题建模主线与多模型候选方案；
+- 论文手可同步使用 `bzd-problem-restatement` 形成第一章初稿。
+
+### 2. 确定模型
+
+- 将题目、数据结构、候选模型和计划用途交给 `bzd-model-dictionary`；
+- 检查模型是否满足数据要求与关键假设，并确定必要的检验方法；
+- 再使用 Codex、Claude Code、数模智能体或其他工具完成代码求解和结果分析。
+
+### 3. 论文写作与分章自查
+
+依次检查摘要、问题重述、问题分析、模型假设、符号说明、模型建立与求解、参考文献和附录以及 AI 工具披露。写作过程中如需阶段性了解整体水平，可调用 `bzd-review-paper` 并选择不执行严格格式审查。
+
+### 4. 终稿检查
+
+1. 使用 `bzd-paper-aigc-auditor` 定位语言模板化、算法堆砌和建模逻辑断层；
+2. 使用 `bzd-paper-format-checker` 执行严格格式、页面结构、匿名性和文件卫生检查；
+3. 修改后使用 `bzd-review-paper` 进行最终评审，并接入同一版本论文的格式检查结果。
+
+## 评分与预测边界
+
+- `bzd-review-paper` 每次都应根据本次赛题重新分解任务并冻结评分细则，不能机械沿用历史题目的答案或既有对话结论；
+- 论文质量分与赛区、学校、组别和指导教师因素分开处理，竞争环境信息用于奖项与位次校准，不应篡改论文自身的学术质量判断；
+- 格式严格审查可将 `bzd-paper-format-checker` 的格式规范分映射为格式质量系数，并由 `bzd-review-paper` 接入，避免重复检查和重复扣分；
+- 高度原创、超出常规评阅路径的方案可能被 AI 低估，最终仍需有经验的指导教师或人工评委复核；
+- 历史获奖数据、赛区强度和经验概率不代表官方名额或获奖承诺。
 
 ## 安装
 
 ### Codex
 
-下载仓库后，将需要使用的具体 Skill 文件夹复制到：
+下载或克隆仓库后，将需要使用的具体 `bzd-...` 文件夹复制到：
 
 ```text
 Windows：%USERPROFILE%\.codex\skills\
@@ -141,61 +133,89 @@ macOS/Linux：~/.codex/skills/
 
 ```text
 .codex/skills/
+├── bzd-modeling-workflow/
+├── bzd-problem-translator/
+├── bzd-modeling-ideas/
 ├── bzd-model-dictionary/
 ├── bzd-paper-format-checker/
 ├── bzd-review-paper/
-└── 其他需要使用的 Skill/
+└── 其他需要使用的bzd Skill/
 ```
 
 ### Claude Code
 
-将需要使用的具体 Skill 文件夹复制到：
+将需要使用的具体 `bzd-...` 文件夹复制到：
 
 ```text
 项目目录/.claude/skills/
 ```
 
-安装时应直接复制 `bzd-...` 文件夹，不要把外层中文分类目录一起作为 Skill 安装目录。
+应直接复制 `bzd-...` 文件夹，不要把外层中文分类目录作为一个 Skill 安装。Claude Code 补充配置见 [`integrations/claude-code/`](integrations/claude-code/)。
 
 ## 调用示例
 
-### 查询模型字典
+### 总控完整流程
 
 ```text
-调用 $bzd-model-dictionary 判断以下模型是否适合：
+调用 $bzd-modeling-workflow。
 
-题目：<题目内容或赛题路径>
-数据：<样本量、变量类型、数据结构及缺失情况>
-候选模型：<准备采用的模型>
-求解思路：<当前完整求解方案>
+当前阶段：已有论文初稿
+赛题：<赛题路径>
+附件：<附件路径，可选>
+论文：<论文路径>
+
+请判断需要调用哪些专项Skills，汇总重复问题，并给出下一步修改顺序。
 ```
 
-### 检查整篇论文格式
+### 翻译赛题
 
 ```text
-使用 $bzd-paper-format-checker 检查以下论文：
+调用 $bzd-problem-translator 翻译以下完整赛题：<赛题路径>
+请逐句解释并输出跨问题联动图。
+```
+
+### 生成建模思路
+
+```text
+调用 $bzd-modeling-ideas 分析：
+赛题：<赛题路径>
+附件：<附件路径，可选>
+题意翻译报告：<可选路径>
+
+请生成贯穿全文的建模主线，并比较每一问的候选模型与选用理由。
+```
+
+### 判断模型是否适用
+
+```text
+调用 $bzd-model-dictionary：
+题目：<题目内容或路径>
+数据：<样本量、变量类型、数据结构和缺失情况>
+候选模型：<模型名称>
+求解思路：<模型在本题中的具体用途>
+```
+
+### 严格检查论文格式
+
+```text
+调用 $bzd-paper-format-checker：
 论文：<PDF或Word路径>
 
-请输出逐项格式检查结果、格式规范分和优先修改建议。
+请逐项检查并输出格式规范分、格式质量系数和优先修改建议。
 ```
 
-### 检查论文专项章节
+### 最终评审
 
 ```text
-使用 $bzd-model-solution-checker 检查：
+调用 $bzd-review-paper：
+竞赛类型：<高教社杯国赛或其他竞赛>
+组别：<本科组或高职高专组，可选>
+赛区：<赛区，可选>
+学校：<学校，可选>
+指导教师：<教师，可选>
 赛题：<赛题路径>
 论文：<论文路径>
-附件或代码：<可选路径>
-```
-
-### 评审完整论文
-
-```text
-使用 $bzd-review-paper 评审：
-竞赛类型：<高教社杯国赛或其他竞赛名称>
-赛题：<赛题路径>
-论文：<论文路径>
-已有格式自查报告：<可选，bzd-paper-format-checker输出路径>
+已有格式检查报告：<可选路径>
 ```
 
 ## 项目结构
@@ -205,34 +225,53 @@ bzd-math-modeling-skills/
 ├── README.md
 ├── CHANGELOG.md
 ├── skills/
-│   ├── 综合评审与自我定位类/
+│   ├── 总控类/
+│   │   └── bzd-modeling-workflow/
 │   ├── 生成类/
-│   └── 论文自查类/
-│       ├── bzd-paper-format-checker/
-│       ├── bzd-abstract-checker/
-│       ├── bzd-problem-restatement/
-│       ├── bzd-problem-analysis-checker/
-│       ├── bzd-model-assumption-checker/
-│       ├── bzd-symbol-notation-checker/
-│       ├── bzd-model-solution-checker/
-│       ├── bzd-ai-usage-disclosure/
-│       ├── bzd-reference-appendix-checker/
-│       ├── bzd-model-dictionary/
-│       └── bzd-review-paper/
+│   │   ├── bzd-problem-translator/
+│   │   ├── bzd-modeling-ideas/
+│   │   ├── bzd-problem-restatement/
+│   │   └── bzd-ai-usage-disclosure/
+│   ├── 论文自查类/
+│   │   ├── bzd-paper-format-checker/
+│   │   ├── bzd-abstract-checker/
+│   │   ├── bzd-problem-restatement/
+│   │   ├── bzd-problem-analysis-checker/
+│   │   ├── bzd-model-assumption-checker/
+│   │   ├── bzd-symbol-notation-checker/
+│   │   ├── bzd-model-solution-checker/
+│   │   ├── bzd-reference-appendix-checker/
+│   │   ├── bzd-ai-usage-disclosure/
+│   │   ├── bzd-paper-aigc-auditor/
+│   │   ├── bzd-model-dictionary/
+│   │   └── bzd-review-paper/
+│   └── 综合评审与自我定位类/
+│       ├── bzd-review-paper/
+│       └── bzd-cumcm-school-awards/
+├── integrations/
+│   └── claude-code/
 └── 数模资料/
 ```
 
 ## 数模资料
 
-仓库中的 [`数模资料/`](数模资料/) 提供论文模板、LaTeX模板、评分观察点、评阅细则示例及各板块详细说明文档。完整索引和使用范围见 [`数模资料/README.md`](数模资料/README.md)。
+[`数模资料/`](数模资料/) 当前包含：
+
+- 2026 年数学建模竞赛 Word 模板；
+- 2026 年数学建模竞赛模板 PDF；
+- 近五年官方评阅细则与评分要点参考资料；
+- 数学建模论文自查表；
+- BZD 数模论文 AI 痕迹自查指南。
+
+具体文件及使用范围见 [`数模资料/README.md`](数模资料/README.md)。
 
 ## 重要说明
 
-- 本项目不是竞赛官方工具，输出不代表官方评审结果、实际排名或奖项承诺；
-- 没有真实附件数据时，不应虚构模型参数、最优结果、程序运行情况和预测精度；
-- 使用者应自行确认当届竞赛关于AI工具、论文格式、附录材料和学术诚信的最新规定；
-- 请勿向公开仓库提交未公开论文、个人身份信息、API Key、Token或无传播授权的内部材料；
-- 仓库中的评分规则、历史数据和经验阈值可能随竞赛年份发生变化。
+- 不要向公开仓库提交未公开赛题、未授权论文、个人身份信息、API Key、Token 或内部材料；
+- 没有真实数据和程序运行证据时，不得虚构模型参数、最优结果、显著性、预测精度或复现结论；
+- 使用者应自行确认当届竞赛关于 AI 工具、论文格式、附录材料和学术诚信的最新规定；
+- 仓库内经验规则、历史数据和奖项阈值可能随竞赛年份变化；
+- 对重要结论、模型适用性和最终论文质量，建议保留人工复核环节。
 
 ## 联系方式
 

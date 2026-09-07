@@ -26,6 +26,7 @@ Do not invent missing data, coefficients, results, accuracy, or official preferr
 Read completely before generating the report:
 
 - [references/integrated-modeling-patterns.md](references/integrated-modeling-patterns.md)
+- For CUMCM A-E problems, read [references/cumcm-abcde-modeling-patterns.md](references/cumcm-abcde-modeling-patterns.md) after independently reconstructing the current task graph.
 - [references/strategy-output-standard.md](references/strategy-output-standard.md)
 
 ## Core workflow
@@ -34,7 +35,7 @@ Read completely before generating the report:
 2. Extract shared objects, data, indices, variables, parameters, units, coordinate/time systems, constraints, objectives, and evaluation metrics.
 3. Identify each question's role: foundation, estimation, explanation, prediction, extension, optimization, decision, or validation.
 4. Define interfaces between questions. State which earlier output becomes a later input, parameter, baseline, constraint, initial value, or validator.
-5. Design a shared modeling backbone that can run through the whole paper. Preserve physical, statistical, temporal, spatial, recursive, and decision structures when present.
+5. Design a shared modeling backbone that can run through the whole paper. Preserve physical, statistical, temporal, spatial, recursive, and decision structures when present. For CUMCM, compare the current task with the matching A-E stable backbone, but let current data and constraints override historical patterns.
 6. For each question, perform the required four-part analysis below and give genuinely distinct candidate models.
 7. Compare candidate models on the same task and output. Explain selection from suitability, assumptions, data, interpretability, accuracy, implementation cost, validation, and downstream compatibility.
 8. Recommend a paper-level model combination. Avoid selecting locally attractive models that create incompatible definitions or broken data flow across questions.

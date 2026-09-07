@@ -15,6 +15,8 @@ Begin with the provided materials. Do not require the full paper before performi
 
 Read [references/analysis-checklist.md](references/analysis-checklist.md) before reviewing.
 
+For CUMCM A-E problems, also read [references/cumcm-abcde-analysis-checks.md](references/cumcm-abcde-analysis-checks.md). Use it to discover checks relevant to the current prompt, not to require a historical model or force the usual letter-specific structure.
+
 ## Core distinction
 
 问题分析 is the bridge from the practical problem to the mathematical model. It should explain:
@@ -30,7 +32,7 @@ It describes **modeling ideas and plans, not computed results**. Concrete predic
 
 ## Review procedure
 
-1. Reconstruct the tasks and material conditions from the original problem.
+1. Reconstruct the tasks and material conditions from the original problem before consulting historical patterns.
 2. Map each task to the corresponding paragraph in the draft.
 3. Determine whether question relationships are progressive, parallel, or partly intersecting. Do not force a progressive chain.
 4. Check whether every stated data issue and preprocessing method has evidence in the problem or attachments.
