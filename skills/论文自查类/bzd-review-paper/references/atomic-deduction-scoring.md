@@ -30,25 +30,19 @@ When no complete matching report exists, use `formatting-standard.md` normally.
 
 ## 2. Per-problem block structure
 
-Every problem must contain three score-bearing blocks:
+Every problem must preserve three evidence-location blocks:
 
 - `模型建立`: mathematical abstraction, assumptions, variables, mechanism, equations, objectives, constraints and problem-specific mapping;
 - `模型求解`: data processing, algorithm, parameters, implementation, convergence, reproducibility and validation needed to obtain the answer;
 - `结果与回答`: numerical or qualitative answer, units, requested tables/files/plans, interpretation, feasibility and direct response to every subtask.
 
-Allocate weights according to the frozen rubric. Example for a 25-point problem:
+The score-bearing weights come from the seven fixed core dimensions in `evidence-centered-scoring.md`. `模型建立`, `模型求解`, and `结果与回答` identify where the evidence is expected; do not independently allocate another 15/5/5-style weight system.
 
-| Block | Weight | 90% ceiling |
-|---|---:|---:|
-| 模型建立 | 15 | 13.5 |
-| 模型求解 | 5 | 4.5 |
-| 结果与回答 | 5 | 4.5 |
-
-This is an example, not a universal ratio. Preserve the problem's actual difficulty and deliverables.
+Every atomic row must therefore contain both a core dimension and an evidence-location block.
 
 ## 3. Freeze atomic checks before scoring
 
-For every problem and every one of its three blocks, write several observable atomic checks before reading the paper for quality. Do not reuse one undifferentiated checklist for the entire paper. Each check must come from that problem's frozen rubric, state what evidence satisfies it, and carry a prospective 1/2/3 deduction level.
+For every problem and each applicable core dimension, write observable atomic checks before reading the paper for quality. Do not reuse one undifferentiated checklist for the entire paper. Each check must come from the model-independent requirement matrix, identify its evidence-location block, state what evidence satisfies it, and carry a prospective 1/2/3 deduction level.
 
 ### 模型建立
 
@@ -111,8 +105,8 @@ A novel alternative remains valid when it satisfies the task, respects all const
 
 For every problem, output at least:
 
-| Problem | Block | Atomic check | Weight/ceiling | Evidence | Deduction | Earned |
-|---|---|---|---|---|---:|---:|
+| Problem | Core dimension | Evidence block | Atomic check | Weight/ceiling | Evidence | Deduction | Earned |
+|---|---|---|---|---|---|---:|---:|
 
 After all rows, show:
 
@@ -121,5 +115,7 @@ After all rows, show:
 - uncapped problem deduction sum;
 - total operational deduction, even when it exceeds the nominal problem weight;
 - problem 90% ceiling and final problem score.
+
+After this ledger, calculate and display the separate post-score penalty ledger required by `evidence-centered-scoring.md`. Do not bury 5/10-point AI-era penalties inside the 1/2/3 atomic rows.
 
 The arithmetic must be reproducible from visible rows. Keep `评委满分保留` separate from paper defects.

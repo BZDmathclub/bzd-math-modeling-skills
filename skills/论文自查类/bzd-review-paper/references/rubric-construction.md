@@ -2,6 +2,8 @@
 
 Build the rubric before evaluating the paper. The rubric must total exactly 100 points and be usable by another judge with substantially similar results.
 
+Read and apply [evidence-centered-scoring.md](evidence-centered-scoring.md). In the AI-assisted competition environment, do not treat process completeness, model complexity or the mere presence of numerical results as high-level evidence.
+
 ## 1. Build from the supplied problem
 
 Derive the rubric from:
@@ -24,6 +26,8 @@ Create a requirement matrix containing:
 - dependencies between tasks;
 - phrases indicating emphasis, such as “must,” “justify,” “compare,” “evaluate,” or “recommend.”
 
+The frozen matrix must explicitly preserve these eight model-independent fields: mandatory core tasks, inviolable conditions, required outputs, evidence required for the results, data issues that must be handled, risks that must be validated, information passed between questions, and implementation constraints.
+
 Split compound requirements into independently scorable items. Do not invent a preferred model family. Reward fitness, correctness, and evidence rather than method prestige.
 
 ## 3. Allocate 100 points
@@ -32,12 +36,12 @@ Use this required default framework:
 
 The rubric weights must still total 100, but every numeric criterion has a mandatory earned-score ceiling of 90% of its weight. For a criterion weighted `w`, record `0.90w` as its maximum earnable score. This judge-reserve rule applies to abstract, formatting, model work and supplementary quality. It is not evidence of a paper defect, must not be reallocated, and makes 90/100 the theoretical raw-score maximum.
 
-For each problem, divide its weight into `模型建立`, `模型求解`, and `结果与回答`, then derive multiple observable atomic checks inside each block from the current task and relevant historical review points. Give every atomic check a nominal weight and require those nominal weights to sum exactly to the problem weight. Score with [atomic-deduction-scoring.md](atomic-deduction-scoring.md): independently deduct 1-3 points for every unmet check without a 10-point deduction cap, while flooring the earned problem score at zero. A 25-point problem may use 15/5/5, but the actual split must follow task difficulty and required deliverables.
+Use the fixed architecture in `evidence-centered-scoring.md`: abstract 10, format/readability 10, core problem answering 75, and whole-paper coherence/application value 5. Divide the 75-point core across its seven fixed dimensions and then across actual problems. Use `模型建立`, `模型求解`, and `结果与回答` as evidence-location tags rather than another independent weight system.
 
 - **Abstract: exactly 10 points.** Read and apply `title-abstract-keywords.md`. Use its 3-point completed-abstract floor, lay-reader test, adaptive paragraph structure and 0-10 anchors.
 - **Formatting compliance: exactly 10 nominal points.** Read and apply `formatting-standard.md`: eligibility gate, itemized 1-3 point deductions, normalized `[-10,10]` format score, nonnegative 90%-capped raw-score contribution, then the deterministic `0-1.00` coefficient.
-- **Model construction and solution: 70–75 points.** This must contain model assumptions, model construction, and model solution. Allocate most points to the explicit subquestions and their mathematical/computational completion.
-- **Problem-specific supplementary quality: 5–10 points.** Allocate the remainder needed to reach 100 among validation/sensitivity, result analysis, model evaluation, generalization, innovation, or another explicit deliverable. Do not create an irrelevant category merely to fill points.
+- **Core problem answering: exactly 75 points.** Allocate exactly `12/14/12/12/10/10/5` to task abstraction, model necessity, assumption/parameter/constraint evidence, reasoning and cross-question linkage, reproducibility, validation/falsification/robustness, and insight/innovation/application value.
+- **Whole-paper coherence and application value: exactly 5 points.** Judge whether the full paper forms one intelligible modeling story and converts results into defensible task-level value without duplicating the 75-point core criteria.
 
 The model construction and solution block must be decomposed rather than scored holistically:
 
@@ -81,8 +85,8 @@ Freeze the rubric only if all checks pass:
 
 - weights sum exactly to 100;
 - abstract equals 10 and formatting equals 10;
-- model assumptions, construction, and solution are explicit and together equal 70–75;
-- remaining categories equal 5–10 and are justified by the problem;
+- the seven core evidence-centered dimensions equal exactly 75;
+- whole-paper coherence and application value equal exactly 5;
 - formatting eligibility has been checked before numeric scoring, and the deterministic coefficient calculation is shown before finalizing the adjusted total;
 - every explicit problem deliverable maps to at least one criterion;
 - every criterion maps to a source requirement or declared cross-cutting quality;
