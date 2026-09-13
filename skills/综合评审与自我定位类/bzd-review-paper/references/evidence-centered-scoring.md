@@ -130,6 +130,26 @@ Apply 10 points only for a distinct severe issue not already fully captured by t
 
 Do not double-punish the same root defect under both the atomic ledger and post-score ledger. If the ordinary criterion already deducted for a local weakness, use a post-score penalty only when the defect is a repeated, paper-wide AI-era presentation failure or independently severe integrity failure.
 
+### 6.3 Result disclosed before solution: −5 once
+
+The abstract should report results. Outside the abstract, inspect problem restatement, problem analysis, assumptions, notation and each problem's pre-solution exposition. If any of these sections states a final result or a key process-derived numerical result before the corresponding modeling and solution evidence appears, list every occurrence and apply one 5-point whole-paper penalty. Do not multiply the penalty by the number of leaked values.
+
+Problem-given data, cited constants, threshold definitions and necessary illustrative examples are not solution results. Judge provenance before applying the penalty.
+
+### 6.4 Appendix length: −3 or −10
+
+Count actual appendix pages. Apply one mutually exclusive penalty:
+
+- appendix no longer than 15 pages: 0;
+- appendix longer than 15 pages and no longer than 30 pages: −3;
+- appendix longer than 30 pages: −10.
+
+Do not add −3 and −10 together. The appendix must contain the core code needed to reproduce every question, not every engineering file, third-party library source, repeated utility, debugging version or full log. A large appendix does not cure missing question-specific core code. Treat an official stricter rule separately as an eligibility issue.
+
+### 6.5 Chinese-source balance
+
+For a Chinese problem or China-specific context, inspect whether the bibliography includes real and relevant Chinese-language sources supporting background, data, methods or domestic standards. An all-English bibliography is a source-balance and judge-impression defect when suitable Chinese sources exist. Score it under ordinary reference/presentation quality; do not invent a fixed 5/10 penalty and do not reward irrelevant Chinese references inserted only for appearance.
+
 ## 7. Narrative comprehensibility gate
 
 Read the paper as an informed outsider who has not worked on the problem and is not a specialist in the paper's chosen method. Ignore the symbol table during this pass and ask whether the body itself tells a coherent modeling story:
@@ -149,7 +169,7 @@ This is a comprehension gate, not a writing-style preference. Dense but fully de
 1. Freeze the model-independent requirement matrix and 100-point rubric.
 2. Apply the 90% judge ceiling and ordinary atomic deductions.
 3. If eligible, apply the existing low-score bottom-up safeguard.
-4. Apply the separately listed AI-era post-score penalties.
+4. Apply the separately listed post-score penalties: abstract problem omission, unexplained equations/symbols, result-before-solution disclosure, appendix length and any independently severe evidence-integrity failure.
 5. Apply the narrative comprehensibility cap of 49.9 when triggered.
 6. The resulting value is the reported `原始得分`.
 7. Apply the existing format-quality multiplier to obtain `论文质量最终得分`.

@@ -74,6 +74,7 @@ Use `title-abstract-keywords.md` for content scoring. Abstract normally uses pro
 - Explain what must be done, the objective/principle and proposed route for each question.
 - Analyze data/attachments and preprocessing where relevant.
 - Establish modeling direction but do not reveal final results here; results belong in the abstract/results sections.
+- If problem restatement, problem analysis, assumptions, notation or pre-solution exposition reveals a final result or key process-derived numerical result, list all occurrences and apply the one-time 5-point post-score penalty defined in `evidence-centered-scoring.md`.
 
 ### Assumptions
 
@@ -104,12 +105,14 @@ Use `title-abstract-keywords.md` for content scoring. Abstract normally uses pro
 - Start references on a new page. Require in-text citation markers and a consistent complete bibliographic form.
 - Use at least five references as a recommended benchmark, not an automatic eligibility rule unless the contest states it.
 - Check books, journal articles and web resources for author/title/source/year or access date as applicable.
+- Chinese problems and China-specific contexts should include real, relevant Chinese-language sources when suitable sources exist. An entirely English bibliography is a source-balance and judge-impression defect, but irrelevant Chinese items must not be added merely to satisfy appearance.
 
 ### Appendices
 
 - Start appendices on a new page.
-- Include all source code/commands actually needed to reproduce results, including Excel/SPSS interactions where applicable, and independently sourced data. Do not duplicate contest-provided data.
+- Include the core code/commands needed to reproduce every question, including relevant Excel/SPSS interactions and independently sourced data. “Complete code” means that every question's core calculation chain is present, not that every engineering file, third-party library source, repeated utility, debug version or full log is pasted into the paper. Do not duplicate contest-provided data.
 - If no program was used, explicitly state so. Missing, non-runnable or body-inconsistent code is a major error and may affect reproducibility/model-solution scoring in addition to formatting only when those are distinct impacts.
+- Count appendix pages and apply the mutually exclusive post-score rule: no page deduction through 15 pages; deduct 3 points above 15 through 30 pages; deduct 10 points above 30 pages. Do not stack the two deductions and do not describe this house-rule deduction as official ineligibility.
 
 ## 6. Required formatting output
 
