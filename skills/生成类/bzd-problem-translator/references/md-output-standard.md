@@ -117,6 +117,20 @@ For Huawei Cup problems, add these verification rows: `应用题小问与原题�
 - Use inline LaTeX `$...$` or fenced math only when needed to preserve a formula or symbol accurately.
 - Keep the Mermaid block self-contained and free of Markdown links or HTML.
 
+## Optional HTML rendering
+
+The `.md` file is the deliverable. When the user also asks for HTML, render it with `scripts/render_html.py <report.md>` rather than hand-writing markup, so the two views cannot drift apart.
+
+The renderer relies on this standard being followed exactly. Keep to it or the rendering will be rejected:
+
+- one H1 and `##` section headings in the required order;
+- every table preceded by a header row and a separator row, with a constant cell count per row after escaped pipes are accounted for;
+- literal `|` inside cells escaped as `\|`, and internal line breaks written as `<br>`;
+- the Mermaid diagram in a fenced `mermaid` block containing no Markdown links or HTML;
+- the warning line in section 0 written as a blockquote, separated from the word problem by a blank line so the two render as distinct blocks.
+
+The renderer aborts with a non-zero exit code when it detects a lost table, a heading-count mismatch, an inconsistent row width, a dropped flowchart, or unrendered Markdown. Fix the Markdown and re-run; do not edit the HTML by hand.
+
 ## Verification
 
 Before delivery:

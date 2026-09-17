@@ -1,6 +1,6 @@
 ---
 name: bzd-problem-translator
-description: Translate a complete mathematical modeling contest problem sentence by sentence into precise modeling language, preserve every substantive condition and definition, expose hidden constraints, draw a mandatory Mermaid cross-question flowchart, audit omissions, and deliver one easy-to-open Markdown report. For Huawei Cup (CPGMCM) graduate-contest problems, additionally prepend a plain-language layer that rewrites the background and questions as a primary-school word problem with a mandatory term-mapping table. Use whenever a user supplies a CUMCM, CPGMCM, or other modeling problem and asks to interpret, translate, unpack, read closely, identify requirements, or avoid missing details before modeling.
+description: Translate a complete mathematical modeling contest problem sentence by sentence into precise modeling language, preserve every substantive condition and definition, expose hidden constraints, draw a mandatory Mermaid cross-question flowchart, audit omissions, and deliver one easy-to-open Markdown report. For Huawei Cup (CPGMCM) graduate-contest problems, additionally prepend a plain-language layer that rewrites the background and questions as a primary-school word problem with a mandatory term-mapping table. Optionally render the finished report as one standalone HTML page on request. Use whenever a user supplies a CUMCM, CPGMCM, or other modeling problem and asks to interpret, translate, unpack, read closely, identify requirements, or avoid missing details before modeling.
 ---
 
 # BZD Problem Translator
@@ -45,7 +45,18 @@ Require the complete problem, including the actual problem title, background, de
 8. Trace every numbered question backward to supporting sentences and forward to later questions.
 9. Build the mandatory cross-question dependency chain as one Mermaid flowchart. For every question, identify its incoming definitions/data/previous results and outgoing results/constraints/validation uses. Draw genuinely independent questions as parallel branches connected to shared inputs and the whole-problem objective; never omit a numbered question.
 10. Run a coverage audit: every substantive source unit from the problem-title anchor onward must appear exactly once in the ledger, every explicit deliverable must appear in the requirement matrix, and every numbered question must appear in the Mermaid flowchart. For Huawei Cup problems, also run the self-check in `cpgmcm-plain-language-translation.md` section 7. Report excluded pre-title boilerplate separately only as an audit note, not as translated content.
-11. Create one polished UTF-8 `.md` report following `md-output-standard.md`. Do not create XLSX, CSV, HTML, or image files unless the user separately requests them. Do not complete or export the report if the Mermaid flowchart is missing, invalid, or omits any numbered question, or if a Huawei Cup report is missing the plain-language layer. Return a short completion note and a clickable Markdown-file link instead of pasting the full report into chat when file creation is available.
+11. Create one polished UTF-8 `.md` report following `md-output-standard.md`. Do not create XLSX, CSV, or image files unless the user separately requests them. Do not complete or export the report if the Mermaid flowchart is missing, invalid, or omits any numbered question, or if a Huawei Cup report is missing the plain-language layer. Return a short completion note and a clickable Markdown-file link instead of pasting the full report into chat when file creation is available.
+12. Only when the user asks for an HTML rendering as well, run `scripts/render_html.py <report.md>`. Never run it in place of step 11.
+
+## Optional HTML rendering
+
+`scripts/render_html.py` renders a finished report as one standalone HTML file. Usage: `python scripts/render_html.py <report.md> [-o <report.html>]`.
+
+Use it only on explicit request. It reads a report that already satisfies `md-output-standard.md` and does not repair, reword, or complete one; fix the Markdown first.
+
+Body text and every table render statically so the report stays readable offline. Only the Mermaid flowchart needs the CDN, and the page reports that plus auto-expands the diagram source when the CDN is unreachable rather than showing an empty box.
+
+The script refuses to write output and exits non-zero when the rendering would lose structure: a mismatched table or heading count, a dropped flowchart, a row whose cell count disagrees with its header, or leftover unrendered Markdown. Treat a non-zero exit as a defect in the Markdown or the renderer, not as a reason to hand-edit the HTML.
 
 ## Required Markdown content
 
@@ -116,7 +127,7 @@ Report substantive source-unit count, ledger-row count, numbered questions cover
 - If OCR or extraction is uncertain, mark the affected sentence for visual verification.
 - Never count or translate generic contest headers, year labels, format reminders, page headers, download watermarks, or submission boilerplate that appears before the actual problem title.
 - Do not skip a special instruction merely because it resembles boilerplate when it appears after the problem title or changes the current problem's data, constraints, allowed resources, or deliverables.
-- Deliver one UTF-8 `.md` file by default.
+- Deliver one UTF-8 `.md` file by default. The HTML rendering is an additional view of that same file, never a substitute for it or a place to add content the Markdown lacks.
 - Escape Markdown-table cell content containing `|`, replace internal line breaks with `<br>`, and preserve formulas with inline or fenced LaTeX where useful.
 - Never treat `跨问题联动链` as optional. A Markdown report without a populated, syntactically valid Mermaid flowchart covering every numbered question is incomplete and must not be delivered.
 - The plain-language layer is additive and never substitutive. Do not shorten, merge, or drop the sentence-level ledger because the word-problem version already conveys the gist.
