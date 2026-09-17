@@ -5,15 +5,39 @@ Create one UTF-8 Markdown file named `<题号或题名>-题意逐句翻译.md`. 
 ## Required heading order
 
 1. `# 题目名称`
-2. `## 1. 整题概览`
-3. `## 2. 逐句题意翻译与联动表`
-4. `## 3. 核心术语与口径表`
-5. `## 4. 各问输入—任务—输出表`
-6. `## 5. 跨问题联动链`
-7. `## 6. 最容易漏读或误解的句子`
-8. `## 7. 完整性核验`
+2. `## 0. 小学应用题式题意还原` — Huawei Cup only; omit this heading entirely for other contests
+3. `## 1. 整题概览`
+4. `## 2. 逐句题意翻译与联动表`
+5. `## 3. 核心术语与口径表`
+6. `## 4. 各问输入—任务—输出表`
+7. `## 5. 跨问题联动链`
+8. `## 6. 最容易漏读或误解的句子`
+9. `## 7. 完整性核验`
 
 ## Section requirements
+
+### 0. 小学应用题式题意还原（仅华为杯）
+
+Follow `cpgmcm-plain-language-translation.md`. Include four parts in this order:
+
+1. **一句话版** — at most 40 characters, zero subject-specific terms.
+2. **小学应用题版** — one continuous word problem within 400 characters, sub-questions numbered to match the original questions one-to-one, immediately followed by the verbatim warning line:
+
+   > ⚠️ 本节是帮助理解的类比版本，已丢失精度，**不可作为建模与求解依据**。实际建模必须回到第 3 节逐句翻译表与原始题面。
+
+3. **术语生活化映射表**:
+
+   | 原文专业术语 | 生活化替身 | 这个替身丢掉了什么 | 对应小问 |
+   |---|---|---|---|
+
+   The third column is mandatory for every row; `无` is not acceptable.
+
+4. **背景知识补课卡**:
+
+   | 需要补的背景 | 三句话说明 | 不懂会影响哪一问 |
+   |---|---|---|
+
+   Write `无` only when the problem genuinely assumes no unexplained background.
 
 ### 1. 整题概览
 
@@ -81,6 +105,8 @@ After the diagram, include no cross-question edge table. A short paragraph expla
 
 Include source pages, substantive source-unit count, translation-row count, question count, attachments covered/missing, unresolved ambiguities, excluded pre-title boilerplate, OCR uncertainties, and no-omission conclusion. Include `跨问题联动链完整性` with `通过/不通过` and explicitly list all numbered questions represented in the Mermaid graph. Do not deliver when the result is `不通过`.
 
+For Huawei Cup problems, add these verification rows: `应用题小问与原题小问一一对应`, `术语映射表第三列无空缺`, `应用题版未出现学科名词`, `约束方向与依赖顺序未失真`, and `免责提示行原文保留`. Each must read `通过` before delivery.
+
 ## Markdown formatting
 
 - Use UTF-8 and a single H1.
@@ -100,3 +126,4 @@ Before delivery:
 3. Confirm the Mermaid block exists, starts with `flowchart`, uses unique node IDs, represents every numbered question, shows parallel/converging/return links when required, and contains a final-output node.
 4. Confirm every Markdown table has a separator row and a consistent number of cells per row after escaped pipes are accounted for.
 5. Confirm the file opens as UTF-8, contains no placeholder text, and exports as exactly one `.md` file.
+6. For Huawei Cup problems, run the section-7 self-check in `cpgmcm-plain-language-translation.md` and confirm the sentence-level ledger is still complete rather than replaced by the plain-language layer. For other contests, confirm section 0 is absent.
