@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### bzd-paper-format-checker
+
+- 新增「中国研究生数学建模竞赛（华为杯）」特别规则：识别华为杯后，页面结构/摘要页/正文起始页以当届官方规范为准、不套用国赛固定页序；目录与英文摘要是否要求以当届规范为准；附录页数阶梯继续适用；不按题号字母预设题型。
+- `agents/openai.yaml` 与 `format-review-rules.md` 同步补充华为杯分支。
+
 ### bzd-problem-translator
 
 - 新增 `scripts/render_html.py`：把已完成的题意逐句翻译报告渲染为单文件 HTML。正文与全部表格静态渲染，断网可读；仅 Mermaid 流程图依赖 CDN，加载失败时页面给出提示并自动展开图源码。
