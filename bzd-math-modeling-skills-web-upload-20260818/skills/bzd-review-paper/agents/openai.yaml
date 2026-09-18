@@ -1,0 +1,4 @@
+interface:
+  display_name: "BZD-review-paper"
+  short_description: "区分国赛与小型竞赛，生成专属细则并评审得分位次"
+  default_prompt: "使用 $bzd-review-paper。先确认是否为高教社杯国赛，再根据赛题和论文制定百分制评分细则，按每项90%封顶评分，并使用对应竞赛规模的位次模型输出HTML报告。"

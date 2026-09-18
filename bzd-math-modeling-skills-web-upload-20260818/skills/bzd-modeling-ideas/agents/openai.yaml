@@ -1,0 +1,4 @@
+interface:
+  display_name: "BZD Modeling Ideas"
+  short_description: "生成贯穿全文的整体建模思路、多模型比较与选型依据"
+  default_prompt: "使用 $bzd-modeling-ideas 根据我提供的完整赛题，生成具有大局观和跨问题联动的整体求解思路，并为每一问比较多个可行模型、说明选型理由和创新方向。"
